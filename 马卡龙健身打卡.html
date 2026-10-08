@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>马卡龙健身打卡 🧁</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:light}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#FDF3F6;color:#4A3B52;min-height:100vh;padding-bottom:40px}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px}
+header{text-align:center;padding:22px 0 10px}
+header h1{font-size:22px;letter-spacing:1px}
+header .date{color:#8E7C96;font-size:13px;margin-top:4px}
+.streak{display:inline-block;margin-top:8px;background:#FFE4EE;color:#D66A93;border-radius:999px;padding:4px 14px;font-size:13px;font-weight:600}
+nav{position:sticky;top:0;z-index:20;background:rgba(253,243,246,.94);backdrop-filter:blur(8px);padding:10px 0 8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+nav button{border:none;background:#fff;color:#8E7C96;border-radius:999px;padding:7px 15px;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(233,180,200,.28);transition:.15s}
+nav button.active{color:#fff;font-weight:600}
+section.tab{display:none;animation:fadein .25s}
+section.tab.show{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.card{background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:16px;margin-top:12px}
+.card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.sub{color:#8E7C96;font-size:13px;line-height:1.7}
+.tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
+.t-pink{background:#FFE4EE;color:#D66A93}.t-mint{background:#E2F6ED;color:#3E9A78}.t-blue{background:#E5F4FC;color:#4A93BF}.t-lemon{background:#FFF3D9;color:#C08A2D}.t-purple{background:#EEE9FB;color:#8368C9}
+.today-head{display:flex;align-items:center;gap:10px;margin-top:12px;background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:18px}
+.today-head .big{font-size:40px}
+.today-head h2{font-size:19px}
+.today-head .focus{font-size:13px;color:#8E7C96;margin-top:3px}
+.adjust{margin-top:12px;border-radius:18px;padding:13px 16px;font-size:13.5px;line-height:1.6}
+.adjust b{font-size:14px}
+.a-normal{background:#E5F4FC}.a-light{background:#E2F6ED}.a-plus{background:#FFE4EE}
+.weekstrip{display:flex;gap:6px;margin-top:12px;background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:12px 10px;justify-content:space-between}
+.wd{flex:1;text-align:center;font-size:11px;color:#8E7C96}
+.wd .dot{width:30px;height:30px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;background:#F7ECF1}
+.wd .dot.done{color:#fff}
+.wd .dot.today{outline:2.5px dashed #F49BB6;outline-offset:2px}
+.wd .dot.rest{background:#EDF7F1}
+.item{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px dashed #F4E4EC}
+.item:last-child{border-bottom:none}
+.item .ck{width:26px;height:26px;min-width:26px;border-radius:50%;border:2px solid #F2C4D6;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#fff;transition:.15s}
+.item .ck.on{background:#F49BB6;border-color:#F49BB6}
+.item .nm{font-size:14.5px;flex:1}
+.item .dt{font-size:12.5px;color:#8E7C96;white-space:nowrap}
+.timer{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap}
+.timer .disp{font-size:34px;font-weight:700;color:#D66A93;font-variant-numeric:tabular-nums;letter-spacing:2px}
+.mini{border:none;border-radius:999px;padding:8px 16px;font-size:13px;cursor:pointer;background:#FFE4EE;color:#D66A93;font-weight:600}
+.mini.gray{background:#F3EDF5;color:#8E7C96}
+.mini.mint{background:#E2F6ED;color:#3E9A78}
+.form-row{margin-top:12px}
+.form-row label{font-size:13px;color:#8E7C96;display:block;margin-bottom:6px}
+input[type=number],input[type=time],textarea{width:100%;border:1.5px solid #F0DEE8;border-radius:12px;padding:9px 12px;font-size:15px;color:#4A3B52;background:#FFFBFD;outline:none;font-family:inherit}
+input:focus,textarea:focus{border-color:#F49BB6}
+textarea{resize:vertical;min-height:64px;font-size:13.5px}
+.rpes,.moods{display:flex;gap:8px;flex-wrap:wrap}
+.rpe,.mood{border:1.5px solid #F0DEE8;background:#fff;border-radius:12px;padding:7px 13px;font-size:14px;cursor:pointer;transition:.15s;color:#4A3B52}
+.rpe.sel{background:#FFE4EE;border-color:#F49BB6;font-weight:600}
+.mood.sel{background:#E5F4FC;border-color:#93CFEF}
+.btn{display:block;width:100%;margin-top:16px;border:none;background:linear-gradient(135deg,#F9A8C0,#F49BB6);color:#fff;font-size:16px;font-weight:700;border-radius:999px;padding:13px;cursor:pointer;box-shadow:0 6px 16px rgba(244,155,182,.45)}
+.btn:active{transform:scale(.98)}
+.done-banner{margin-top:12px;border-radius:18px;background:#E2F6ED;color:#2F8163;padding:14px 16px;font-size:14px;font-weight:600;text-align:center}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stat{flex:1;min-width:120px;background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:12px;text-align:center}
+.stat .v{font-size:21px;font-weight:800;color:#D66A93}
+.stat .k{font-size:11.5px;color:#8E7C96;margin-top:2px}
+.rec{display:flex;align-items:flex-start;gap:10px;padding:12px 4px;border-bottom:1px dashed #F4E4EC}
+.rec:last-child{border:none}
+.rec .body{flex:1}
+.rec .l1{font-size:14px;font-weight:600}
+.rec .l1 .sep{color:#D9CBE0;font-weight:400;margin:0 4px}
+.rec .l2{font-size:12.5px;color:#8E7C96;margin-top:3px;line-height:1.55}
+.rec .del{border:none;background:none;color:#D9CBE0;cursor:pointer;font-size:15px;padding:2px 6px}
+.rec .del:hover{color:#E0709B}
+.chartbox{height:260px;position:relative;margin-top:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}}
+.meal{border-radius:16px;padding:14px}
+.m-break{background:#FFF3D9}.m-lunch{background:#E2F6ED}.m-snack{background:#FFEEE2}.m-dinner{background:#E5F4FC}.m-post{background:#EEE9FB}
+.meal h4{font-size:14.5px;margin-bottom:6px}
+.meal p{font-size:12.8px;color:#6B5A73;line-height:1.65}
+.light-box{background:#F0FAF4;border-radius:14px;padding:12px}
+.light-box ul{list-style:none}
+.light-box li{font-size:13px;line-height:1.8;padding-left:20px;position:relative}
+.light-box li::before{position:absolute;left:0}
+.lb-green li::before{content:"🟢"}
+.lb-yellow li::before{content:"🟡"}
+.lb-red li::before{content:"🔴"}
+.recipe{background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:14px}
+.recipe h4{font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.recipe .meta{display:flex;gap:6px;margin:8px 0}
+.recipe .ing{font-size:12.5px;color:#8E7C96;line-height:1.6}
+.recipe .steps{font-size:13px;line-height:1.7;color:#5D4A66;margin-top:8px}
+.ptable{width:100%;border-collapse:collapse;font-size:12.8px}
+.ptable td{padding:6px 8px;border-bottom:1px dashed #F4E4EC}
+.ptable tr:last-child td{border:none}
+.tipcard{background:#FFE4EE;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.7;color:#96587A}
+.setting-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.note{font-size:12px;color:#A796AF;line-height:1.6;margin-top:8px}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:#4A3B52;color:#fff;border-radius:999px;padding:10px 22px;font-size:14px;transition:.3s;opacity:0;z-index:100;max-width:86%;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+#confetti span{position:absolute;top:105%;font-size:22px;animation:fly 1.5s ease-out forwards}
+@keyframes fly{to{transform:translateY(-125vh) rotate(320deg);opacity:0}}
+.empty{text-align:center;color:#B9A8C4;font-size:13px;padding:26px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧁 马卡龙健身打卡</h1>
+  <div class="date" id="headDate"></div>
+  <div class="streak" id="headStreak">🔥 连续 0 天</div>
+</header>
+
+<nav>
+  <button data-tab="today" class="active" style="background:#FFE4EE;color:#D66A93">💪 今日</button>
+  <button data-tab="diet">🍱 饮食</button>
+  <button data-tab="records">📋 记录</button>
+  <button data-tab="weight">⚖️ 体重</button>
+  <button data-tab="settings">⚙️ 设置</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 今日 ============ -->
+<section class="tab show" id="tab-today">
+  <div id="todayBox"></div>
+  <div class="card">
+    <h3>⏱️ 训练计时</h3>
+    <div class="timer">
+      <div class="disp" id="tmDisp">00:00</div>
+      <button class="mini" id="tmStart">▶ 开始</button>
+      <button class="mini gray" id="tmPause">⏸ 暂停</button>
+      <button class="mini gray" id="tmReset">↺ 清零</button>
+    </div>
+    <p class="note" style="text-align:center">练完打卡时会自动带上时长~</p>
+  </div>
+  <div class="card" id="checkinCard">
+    <h3>✅ 今日打卡</h3>
+    <div class="form-row">
+      <label>训练时长(分钟)</label>
+      <input type="number" id="fDur" min="1" max="180" placeholder="30">
+    </div>
+    <div class="form-row">
+      <label>体重 kg(选填,建议晨起空腹称)</label>
+      <input type="number" id="fWt" step="0.1" placeholder="如 53.2">
+    </div>
+    <div class="form-row">
+      <label>今天练得怎么样?</label>
+      <div class="rpes" id="fRpe"></div>
+    </div>
+    <div class="form-row">
+      <label>心情(选填)</label>
+      <div class="moods" id="fMood"></div>
+    </div>
+    <div class="form-row">
+      <label>训练内容(可修改)</label>
+      <textarea id="fContent"></textarea>
+    </div>
+    <div class="form-row">
+      <label>备注(选填)</label>
+      <textarea id="fNote" placeholder="今天哪里最酸?有什么感受~"></textarea>
+    </div>
+    <button class="btn" id="btnCheckin">完成打卡 🎉</button>
+  </div>
+</section>
+
+<!-- ============ 饮食 ============ -->
+<section class="tab" id="tab-diet">
+  <div class="card">
+    <h3>🎯 你的饮食总原则</h3>
+    <p class="sub">体重正常(160cm / 53.2kg)的你<b>不需要节食</b>。要做的是「身体重组」:蛋白质吃够 + 少糖少油炸 + 正常吃。吃够蛋白,练出来的才紧致有线条。</p>
+    <p class="note" style="margin-top:8px">🚫 你的忌口已全站避开:<b>葱、姜、蒜、洋葱、香菜、牛奶</b> —— 牛奶的位置一律用无糖豆浆 / 无糖酸奶替代</p>
+    <div class="tipcard" style="margin-top:10px">🥚 每日蛋白质目标:<b>75~80g</b> · 喝水 <b>1.5~2L</b> · 不砍主食,米饭可以减半但不戒</div>
+  </div>
+
+  <div class="card">
+    <h3>🌤 一日吃法框架</h3>
+    <div class="grid2">
+      <div class="meal m-break"><h4>🌅 早餐(公司/路上)</h4><p><b>模板:鸡蛋1-2个 + 无糖豆浆1盒 / 无糖酸奶1杯 + 玉米/全麦面包/燕麦</b>。便利店就能配齐,蛋白≈15-20g,一整天不容易饿。</p></div>
+      <div class="meal m-lunch"><h4>🍱 午餐(公司外卖)</h4><p>按下方「外卖红绿灯」挑:<b>一整块蛋白质 + 一份蔬菜 + 主食减半</b>。第一口先吃蛋白质和蔬菜,再吃主食。</p></div>
+      <div class="meal m-snack"><h4>🍪 下午加餐(15:00-16:00)</h4><p>防饿防暴食的关键一顿:无糖酸奶 / 水果1个 / 坚果10颗 / 牛肉干,选一。想吃"好吃的"尽量放在这个时段之前解决。</p></div>
+      <div class="meal m-dinner"><h4>🍲 晚餐(公司/到家)</h4><p>公司吃→同红绿灯法则、挑清淡的;到家吃→用下方20分钟快手餐。<b>训练日晚餐别吃撑</b>,七分饱。</p></div>
+      <div class="meal m-post" style="grid-column:1/-1"><h4>🥛 练后(21:40之后)</h4><p>饿才吃,不饿不吃:无糖豆浆300ml / 香蕉1根 / 无糖酸奶。补蛋白帮助恢复,<b>别吃大餐后立刻睡</b>。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚦 公司外卖挑选红绿灯</h3>
+    <div class="grid3">
+      <div class="light-box lb-green"><ul>
+        <li><b>放心选</b></li>
+        <li>清蒸/白灼/卤/炖/烤(非油炸)</li>
+        <li>蛋白质:鸡腿(去皮)、鱼虾、瘦牛肉、鸡蛋、豆腐</li>
+        <li>主食:杂粮饭/玉米/红薯,分量减半</li>
+      </ul></div>
+      <div class="light-box lb-yellow"><ul>
+        <li><b>这样处理</b></li>
+        <li>油多的菜过热水涮一下</li>
+        <li>酱汁/沙拉酱另放,自己控制量</li>
+        <li>米饭只盛半碗</li>
+        <li>先吃蛋白质+蔬菜,最后吃主食</li>
+      </ul></div>
+      <div class="light-box lb-red"><ul>
+        <li><b>尽量少</b></li>
+        <li>糖醋/红烧/干锅/水煮(油煮)/油炸/酥皮</li>
+        <li>含糖饮料、奶茶</li>
+        <li>用菜汤拌饭</li>
+      </ul></div>
+    </div>
+    <p class="note">口诀:<b>一蛋白、一蔬菜、主食减半、汤酱分离</b></p>
+  </div>
+
+  <div class="card">
+    <h3>😋 管不住嘴生存指南</h3>
+    <div class="tipcard" style="background:#FFF3D9;color:#8A6A2B">1️⃣ <b>不戒嘴,管嘴</b>:每周留 2 顿「快乐餐」放在午餐放心吃,其余按法则——越禁止越想吃。</div>
+    <div class="tipcard" style="background:#E2F6ED;color:#2F8163;margin-top:8px">2️⃣ <b>蛋白垫底</b>:每餐第一口先吃蛋白质+蔬菜,饱腹感上来了,主食自然吃得少。</div>
+    <div class="tipcard" style="background:#FFE4EE;margin-top:8px">3️⃣ <b>馋在白天解决</b>:15:30前处理想吃的;奶茶换无糖茶/美式,每周最多1杯全糖快乐。</div>
+    <div class="tipcard" style="background:#E5F4FC;color:#3D7FA8;margin-top:8px">4️⃣ <b>睡前饿</b>(练完21:40+):温豆浆/水煮蛋/一小把坚果可以,精制碳水零食不要。</div>
+    <div class="tipcard" style="background:#EEE9FB;color:#6E56A8;margin-top:8px">5️⃣ <b>分清饿和馋</b>:先喝一大杯水等10分钟,还想吃再吃;家里别囤零食,囤酸奶和水果。</div>
+  </div>
+
+  <div class="card">
+    <h3>🍳 在家20分钟快手健康餐</h3>
+    <p class="sub" style="margin-bottom:10px">到家太饿或周末在家,20分钟内搞定,食材简单、好吃、高蛋白:</p>
+    <div class="grid2">
+      <div class="recipe"><h4>🍤 虾仁滑蛋盖饭 <span class="tag t-pink">15分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈25g</span></div><div class="ing">冷冻虾仁150g · 鸡蛋2个 · 白胡椒或白芝麻 · 米饭</div><div class="steps">① 虾仁解冻,沸水焯30秒<br>② 蛋液加盐打散,小火滑至半凝固<br>③ 合炒,磨点白胡椒(或撒白芝麻),盖在饭上</div></div>
+      <div class="recipe"><h4>🍅 番茄肥牛汤面 <span class="tag t-pink">15分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈20g</span></div><div class="ing">番茄1个 · 肥牛卷100g · 面条1份</div><div class="steps">① 番茄炒软出汁,加水煮开<br>② 下肥牛,撇浮沫<br>③ 煮面,少盐调味即可</div></div>
+      <div class="recipe"><h4>🥪 金枪鱼蛋三明治 <span class="tag t-pink">10分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈24g</span></div><div class="ing">全麦面包2片 · 水浸金枪鱼半罐 · 鸡蛋1个 · 生菜</div><div class="steps">① 鸡蛋煮熟捣碎,拌入金枪鱼+黑胡椒<br>② 面包夹生菜和馅料,对切</div></div>
+      <div class="recipe"><h4>🍗 即食鸡胸暖沙拉 <span class="tag t-pink">10分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈27g</span></div><div class="ing">即食鸡胸1块 · 混合蔬菜包 · 玉米粒 · 油醋汁</div><div class="steps">① 蔬菜微波1分钟<br>② 铺鸡胸、玉米,淋油醋汁</div></div>
+      <div class="recipe"><h4>🍜 味噌豆腐蛋花汤+杂粮饭 <span class="tag t-pink">10分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈18g</span></div><div class="ing">味噌1勺 · 嫩豆腐半盒 · 海带 · 鸡蛋1个 · 杂粮饭</div><div class="steps">① 水开下豆腐海带<br>② 冲入味噌,淋蛋液<br>③ 配杂粮饭吃</div></div>
+      <div class="recipe"><h4>🍌 练后酸奶燕麦杯 <span class="tag t-pink">5分钟</span></h4><div class="meta"><span class="tag t-mint">蛋白≈12g</span></div><div class="ing">无糖酸奶1杯 · 燕麦3勺 · 香蕉半根</div><div class="steps">① 香蕉切片<br>② 酸奶+燕麦+香蕉层层叠<br>③ 练后30分钟内吃最好</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🥚 常见食物蛋白含量速查</h3>
+    <table class="ptable">
+      <tr><td>鸡蛋 1个</td><td>6g</td><td>无糖豆浆 250ml</td><td>7g</td></tr>
+      <tr><td>鸡胸肉 100g</td><td>22g</td><td>虾 100g</td><td>18g</td></tr>
+      <tr><td>瘦牛肉 100g</td><td>20g</td><td>豆腐 100g</td><td>8g</td></tr>
+      <tr><td>无糖酸奶 100g</td><td>5g</td><td>希腊式酸奶 100g</td><td>10g</td></tr>
+      <tr><td>肥牛 100g</td><td>15g</td><td>水浸金枪鱼 100g</td><td>24g</td></tr>
+    </table>
+    <p class="note">每天凑够 75~80g 就行,不用精确计算,大约 = 早2蛋+豆浆/酸奶、午一掌心蛋白质、晚一份蛋白质、加餐一份。</p>
+  </div>
+</section>
+
+<!-- ============ 记录 ============ -->
+<section class="tab" id="tab-records">
+  <div class="stats" id="statBox"></div>
+  <div class="card">
+    <h3>📋 打卡历史</h3>
+    <div id="recList"></div>
+  </div>
+</section>
+
+<!-- ============ 体重 ============ -->
+<section class="tab" id="tab-weight">
+  <div class="card">
+    <h3>⚖️ 体重趋势</h3>
+    <p class="sub">体重正常的你,目标不是掉秤而是「紧致」——围度和线条比数字重要。建议<b>晨起空腹</b>称,日常波动±1kg都正常,看趋势别看单点。</p>
+    <div class="stats" id="wtStats" style="margin-top:10px"></div>
+    <div class="chartbox"><canvas id="wtChart"></canvas></div>
+    <p class="note" id="wtHint">在「今日」打卡时填体重,这里就会出现趋势曲线~</p>
+  </div>
+</section>
+
+<!-- ============ 设置 ============ -->
+<section class="tab" id="tab-settings">
+  <div class="card">
+    <h3>⏰ 每日提醒时间</h3>
+    <p class="sub">每晚到点提醒你训练,改完点「同步」立即生效。</p>
+    <div class="setting-line">
+      <input type="time" id="setTime" style="max-width:150px">
+      <button class="mini" id="btnSync">🔄 同步到每日提醒</button>
+    </div>
+    <p class="note" id="syncNote">当前提醒:21:10(由 Claude 定时任务发送,App 会推送通知)</p>
+  </div>
+  <div class="card">
+    <h3>📧 邮箱提醒</h3>
+    <p class="sub">邮箱:<b>402273397@qq.com</b></p>
+    <p class="note">邮件渠道暂未接入(还没有可用的邮件工具)。目前提醒通过 App 通知发送;以后在 Claude 里接入邮件连接器后,每晚提醒会自动同步发送到这个邮箱,不用重新设置。</p>
+  </div>
+  <div class="card">
+    <h3>💾 数据备份与恢复</h3>
+    <div class="setting-line">
+      <button class="mini mint" id="btnCopy">📋 复制全部数据</button>
+      <button class="mini gray" id="btnRestore">📥 从文本恢复</button>
+      <button class="mini gray" id="btnClear" style="background:#FFE9E9;color:#C05B5B">🗑 清空数据</button>
+    </div>
+    <div class="form-row" id="restoreRow" style="display:none">
+      <label>把之前复制的备份数据粘贴到这里,点「恢复」:</label>
+      <textarea id="restoreTa" placeholder='粘贴备份数据(JSON)'></textarea>
+      <button class="mini mint" id="btnRestoreGo" style="margin-top:8px">恢复</button>
+    </div>
+    <p class="note">数据保存在本页面,建议偶尔复制一份备份。换设备时可用「恢复」搬过去。</p>
+  </div>
+</section>
+
+</div>
+
+<div id="toast"></div>
+<div id="confetti"></div>
+
+<script>
+/* ================= 数据与状态 ================= */
+const KEY='macaronFitnessV1';
+const WEEK=[ // index = getDay()
+ {name:'休息日',emoji:'🛌',color:'#CFE8DC',focus:'恢复日 · 肌肉在休息时生长',
+  warmup:'散步或轻活动5分钟(可选)',
+  items:[{n:'完全休息',d:'最多散步20-30分钟',adj:false},{n:'全身轻拉伸',d:'5分钟,想动就做',adj:false}],
+  stretch:'想拉伸就做几个喜欢的动作',
+  tip:'肌肉是在休息时长的——今天理直气壮地休息~'},
+ {name:'背部日',emoji:'🦋',color:'#B9A7EC',focus:'练背 · 改善圆肩驼背',
+  warmup:'猫牛式10次 + 肩环绕20圈 + 手臂大绕环15圈',
+  items:[{n:'弹力带坐姿划船',s:3,r:12,t:'次',adj:true},{n:'弹力带面拉',s:3,r:15,t:'次',adj:true},{n:'俯身YTW',s:2,r:10,t:'次',adj:true},{n:'靠墙天使',s:2,r:10,t:'次',adj:true},{n:'哑铃俯身飞鸟(2kg)',s:2,r:12,t:'次',adj:true}],
+  stretch:'门框胸肌拉伸30s×2/侧 + 颈部侧向拉伸30s/侧',
+  tip:'划船时想象「用肘往后拉」、肩胛骨往中间夹——练背就是在治圆肩驼背'},
+ {name:'核心日',emoji:'🍑',color:'#F49BB6',focus:'练腹 · 矫正骨盆前倾 · 瘦肚子',
+  warmup:'猫牛式10次 + 站立骨盆前后倾10次(找中立位)',
+  items:[{n:'死虫式',s:3,r:10,t:'次/侧',adj:true},{n:'平板支撑',s:3,r:30,t:'秒',adj:true},{n:'臀桥',s:3,r:15,t:'次',adj:true},{n:'仰卧卷腹',s:3,r:12,t:'次',adj:true},{n:'侧平板支撑',s:2,r:15,t:'秒/侧',adj:true}],
+  stretch:'弓步髋屈肌拉伸30s/侧(治骨盆前倾必做!) + 婴儿式30s',
+  tip:'死虫式腰要贴地、平板别塌腰——质量 > 时长,腰一塌就白练'},
+ {name:'腿臀日',emoji:'🍋',color:'#F7CE7A',focus:'练腿臀 · 改善小腿突出',
+  warmup:'原地踏步1分钟 + 开合跳30s×2 + 腿部摆动',
+  items:[{n:'徒手深蹲',s:3,r:15,t:'次',adj:true},{n:'箭步蹲',s:3,r:10,t:'次/侧',adj:true},{n:'单腿臀桥',s:3,r:10,t:'次/侧',adj:true},{n:'慢速提踵',s:3,r:20,t:'次',adj:true},{n:'勾脚尖(胫骨前肌)',s:3,r:15,t:'次/侧',adj:true}],
+  stretch:'下犬式小腿拉伸30s/侧 + 泡沫轴滚小腿1分钟/侧',
+  tip:'膝盖对准脚尖方向,提踵慢起慢落——今天顺便治小腿肚突出'},
+ {name:'手臂肩日',emoji:'🌸',color:'#93CFEF',focus:'瘦手臂 · 练手臂肩部线条',
+  warmup:'手臂环绕20圈×2 + 弹力带肩外旋15次×2',
+  items:[{n:'哑铃弯举(2kg)',s:3,r:15,t:'次',adj:true},{n:'哑铃颈后臂屈伸',s:3,r:12,t:'次',adj:true},{n:'弹力带三头下压',s:3,r:15,t:'次',adj:true},{n:'哑铃侧平举',s:3,r:12,t:'次',adj:true},{n:'弹力带推肩',s:3,r:12,t:'次',adj:true}],
+  stretch:'肱三头拉伸30s/侧 + 肱二头拉伸30s/侧',
+  tip:'举2秒放3秒,下放越慢越有效——2kg也能练出紧致线条'},
+ {name:'全身循环日',emoji:'🍓',color:'#F28D9E',focus:'全身燃脂 · 紧致 · 提代谢',
+  warmup:'开合跳30s×3,间隔休息30s',
+  items:[{circuit:true,n:'全身循环',rounds:3,rest:'轮间休息90秒',adj:true,
+    moves:['深蹲 15次','弹力带划船 15次','跪姿俯卧撑 10次','登山跑 20次','臀桥 15次','开合跳 30秒']}],
+  stretch:'大腿前侧+后侧拉伸 各30s/侧',
+  tip:'循环日有点喘才有效,但动作别变形——宁可慢,不要乱'},
+ {name:'体态矫正日',emoji:'🌿',color:'#8FD8BD',focus:'主动恢复 · 体态改善黄金日',
+  warmup:'慢走或原地踏步3分钟',
+  items:[{n:'泡沫轴放松',d:'上背2分钟·大腿前后外侧各2分钟·小腿各1.5分钟',adj:false},
+    {n:'静态拉伸',d:'门框胸肌/弓步髋屈肌/下犬小腿/婴儿式,各30s×2',adj:false},
+    {n:'靠墙天使',s:3,r:10,t:'次',adj:true},
+    {n:'收下巴(保持5秒)',s:3,r:10,t:'次',adj:true},
+    {n:'骨盆中立位控制',s:3,r:10,t:'次',adj:true}],
+  stretch:'已包含在训练里',
+  tip:'今天不累,但对体态改善的效果可能是七天里最大的——别跳过'}
+];
+const RPE_OPTS=[{v:5,e:'😌',l:'轻松'},{v:7,e:'🙂',l:'适中'},{v:9,e:'😅',l:'吃力'}];
+const MOODS=['😄','🙂','😐','🥵','😴'];
+const WDN=['周日','周一','周二','周三','周四','周五','周六'];
+
+let S=load();
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);if(p&&p.checkins&&p.settings)return p;}}catch(e){}
+  return {checkins:{},settings:{reminderTime:'21:10',email:'402273397@qq.com'},timer:{acc:0,start:null}};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+function pad(n){return String(n).padStart(2,'0')}
+function keyOf(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function todayKey(){return keyOf(new Date())}
+function diffDays(a,b){return Math.round((Date.parse(b)-Date.parse(a))/86400000)}
+function rec(k){return S.checkins[k]}
+function ensureRec(k){if(!S.checkins[k])S.checkins[k]={date:k,items:{},completed:false};return S.checkins[k]}
+
+/* ================= 智能调整 ================= */
+function getAdjustment(){
+  const t=todayKey();
+  const hist=Object.values(S.checkins).filter(c=>c.date&&c.date<t&&c.completed).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!hist.length)return {lv:'normal',why:'刚开始,按标准计划来——前两周重点是找对发力感'};
+  const gap=diffDays(hist[0].date,t);
+  if(gap>=3)return {lv:'light',why:'隔了'+gap+'天没练,今天先轻松回归(组数减1),身体会很快想起来的'};
+  const l2=hist.slice(0,2).map(c=>c.rpe||7);
+  const avg=l2.reduce((a,b)=>a+b,0)/l2.length;
+  if(avg>=8.5)return {lv:'light',why:'最近两次练得很吃力,今天降一点强度——宁轻勿假,别硬撑'};
+  const done7=Object.values(S.checkins).filter(c=>c.completed&&diffDays(c.date,t)>=0&&diffDays(c.date,t)<=6).length;
+  let streak=0,d=new Date();d.setDate(d.getDate()-1);
+  while(rec(keyOf(d))&&rec(keyOf(d)).completed){streak++;d.setDate(d.getDate()-1);}
+  if(done7>=5&&avg<=7&&streak>=3)return {lv:'plus',why:'近7天完成'+done7+'次且状态在线,今天进阶!强度+1'};
+  return {lv:'normal',why:'状态平稳,按标准计划执行,质量>数量'};
+}
+function applyAdjust(items,lv){
+  return items.map(it=>{
+    const c=Object.assign({},it);
+    if(!c.adj)return c;
+    if(c.circuit){
+      if(lv==='light')c.rounds=Math.max(2,c.rounds-1);
+      if(lv==='plus')c.rounds=Math.min(4,c.rounds+1);
+      return c;
+    }
+    if(lv==='light')c.s=Math.max(2,c.s-1);
+    if(lv==='plus'){c.s=Math.min(4,c.s+1);c.r=c.r+(c.t.indexOf('次')===0||c.t==='次'||c.t==='次/侧'?2:5);}
+    return c;
+  });
+}
+function itemDetail(it){return it.circuit?it.rounds+'轮 · '+it.rest:it.s+'组 × '+it.r+it.t}
+function planText(p,items){
+  const parts=items.map(it=>it.circuit?it.n+it.rounds+'轮('+it.moves.join('+')+')':it.n+' '+it.s+'组×'+it.r+it.t);
+  return p.name+'。热身:'+p.warmup+'。主体:'+parts.join('、')+'。拉伸:'+p.stretch;
+}
+function streakNow(){
+  let n=0,d=new Date();
+  if(!(rec(keyOf(d))&&rec(keyOf(d)).completed))d.setDate(d.getDate()-1);
+  while(rec(keyOf(d))&&rec(keyOf(d)).completed){n++;d.setDate(d.getDate()-1);}
+  return n;
+}
+
+/* ================= 渲染:今日 ================= */
+const LV={normal:{tag:'标准计划',cls:'a-normal'},light:{tag:'轻松回归',cls:'a-light'},plus:{tag:'进阶挑战',cls:'a-plus'}};
+function renderToday(){
+  const d=new Date(),k=keyOf(d),p=WEEK[d.getDay()],adj=getAdjustment();
+  const items=applyAdjust(p.items,adj.lv),lv=LV[adj.lv];
+  const r=rec(k)||{items:{}};
+  let h='';
+  h+='<div class="today-head"><div class="big">'+p.emoji+'</div><div><h2>'+WDN[d.getDay()]+' · '+p.name+'</h2><div class="focus">'+p.focus+'</div></div></div>';
+  h+='<div class="adjust '+lv.cls+'"><b>🍬 今日智能调整: '+lv.tag+'</b><br>'+adj.why+'</div>';
+  // week strip
+  const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+  h+='<div class="weekstrip">';
+  for(let i=0;i<7;i++){
+    const wd=new Date(mon);wd.setDate(mon.getDate()+i);
+    const kk=keyOf(wd),rr=rec(kk);
+    const done=rr&&rr.completed;
+    const st=done?'background:'+WEEK[wd.getDay()].color+';color:#fff':'';
+    h+='<div class="wd"><div class="dot'+(done?' done':'')+(wd.getDay()===0?' rest':'')+(kk===k?' today':'')+'" style="'+st+'">'+(done?'✓':WEEK[wd.getDay()].emoji)+'</div>'+WDN[wd.getDay()].replace('周','')+'</div>';
+  }
+  h+='</div>';
+  h+='<div class="card"><h3>🔥 热身 5分钟</h3><p class="sub">'+p.warmup+'</p></div>';
+  h+='<div class="card"><h3>💪 主体 20分钟<span class="tag t-purple" style="margin-left:6px">点一下打勾</span></h3>';
+  items.forEach((it,i)=>{
+    const on=r.items[it.n]?' on':'';
+    const cb=r.items[it.n]?'✓':'';
+    h+='<div class="item"><div class="ck'+on+'" data-n="'+it.n+'">'+cb+'</div><div class="nm">'+it.n+'</div><div class="dt">'+itemDetail(it)+'</div></div>';
+    if(it.circuit){h+='<div style="font-size:12.5px;color:#8E7C96;line-height:1.8;padding:4px 4px 10px 36px">'+it.moves.join(' → ')+'</div>';}
+  });
+  h+='</div>';
+  h+='<div class="card"><h3>🧘 拉伸 5分钟(必做)</h3><p class="sub">'+p.stretch+'</p></div>';
+  h+='<div class="tipcard">💡 '+p.tip+'</div>';
+  if(r.completed){
+    h+='<div class="done-banner">🎉 今天已打卡 '+(r.duration||'--')+' 分钟 · '+(RPE_OPTS.find(x=>x.v===r.rpe)||{l:'--'}).l+' 继续保持!</div>';
+  }
+  document.getElementById('todayBox').innerHTML=h;
+  document.querySelectorAll('#todayBox .ck').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const n=el.getAttribute('data-n'),rec2=ensureRec(k);
+      if(rec2.items[n]){delete rec2.items[n];}else{rec2.items[n]=true;}
+      save();renderToday();fillForm(false);
+    });
+  });
+}
+function fillForm(reset){
+  const k=todayKey(),r=rec(k),d=new Date(),p=WEEK[d.getDay()];
+  const items=applyAdjust(p.items,getAdjustment().lv);
+  if(reset||!r||!r.completed){
+    const secs=tmSecs();
+    if(secs>=60&&!r)document.getElementById('fDur').value=Math.max(1,Math.round(secs/60));
+    document.getElementById('fContent').value=(r&&(r.contentDraft!=null?r.contentDraft:r.content))||planText(p,items);
+    document.getElementById('fNote').value=(r&&r.noteDraft)||'';
+    document.getElementById('fWt').value=(r&&r.wtDraft)||((r&&r.weight)||'');
+    selRpe=(r&&r.rpeDraft)||((r&&r.rpe)||7);selMood=(r&&r.mood)||null;
+  }else{
+    document.getElementById('fDur').value=r.duration||30;
+    document.getElementById('fWt').value=r.weight||'';
+    document.getElementById('fContent').value=r.content||planText(p,items);
+    document.getElementById('fNote').value=r.note||'';
+    selRpe=r.rpe||7;selMood=r.mood||null;
+  }
+  renderRpe();renderMood();
+}
+let selRpe=7,selMood=null;
+function renderRpe(){
+  document.getElementById('fRpe').innerHTML=RPE_OPTS.map(o=>'<button class="rpe'+(selRpe===o.v?' sel':'')+'" data-v="'+o.v+'">'+o.e+' '+o.l+'</button>').join('');
+  document.querySelectorAll('#fRpe .rpe').forEach(b=>b.addEventListener('click',()=>{selRpe=+b.getAttribute('data-v');const rr=ensureRec(todayKey());rr.rpeDraft=selRpe;save();renderRpe();}));
+}
+function renderMood(){
+  document.getElementById('fMood').innerHTML=MOODS.map(m=>'<button class="mood'+(selMood===m?' sel':'')+'" data-m="'+m+'">'+m+'</button>').join('');
+  document.querySelectorAll('#fMood .mood').forEach(b=>b.addEventListener('click',()=>{selMood=selMood===b.getAttribute('data-m')?null:b.getAttribute('data-m');renderMood();}));
+}
+
+/* ================= 计时器 ================= */
+let tm=S.timer||{acc:0,start:null};
+function tmSave(){S.timer=tm;save();}
+function tmSecs(){return Math.floor(tm.acc+(tm.start?(Date.now()-tm.start)/1000:0));}
+function tmTick(){
+  const s=tmSecs(),el=document.getElementById('tmDisp');
+  if(el)el.textContent=pad(Math.floor(s/60))+':'+pad(s%60);
+}
+setInterval(tmTick,500);
+document.getElementById('tmStart').addEventListener('click',()=>{if(!tm.start){tm.start=Date.now();tmSave();toast('开练!💪');}});
+document.getElementById('tmPause').addEventListener('click',()=>{if(tm.start){tm.acc+=(Date.now()-tm.start)/1000;tm.start=null;tmSave();toast('已暂停');}});
+document.getElementById('tmReset').addEventListener('click',()=>{tm={acc:0,start:null};tmSave();tmTick();});
+
+/* ================= 打卡 ================= */
+document.getElementById('btnCheckin').addEventListener('click',()=>{
+  const dur=parseInt(document.getElementById('fDur').value,10);
+  if(!dur||dur<1){toast('先填一下训练时长哦(分钟)');return;}
+  const k=todayKey(),r=ensureRec(k);
+  r.completed=true;r.duration=dur;
+  const w=parseFloat(document.getElementById('fWt').value);
+  r.weight=isNaN(w)?null:w;
+  r.rpe=selRpe;r.mood=selMood;
+  r.content=document.getElementById('fContent').value;
+  r.note=document.getElementById('fNote').value.trim();
+  r.theme=WEEK[new Date().getDay()].name;
+  delete r.contentDraft;delete r.noteDraft;delete r.wtDraft;delete r.rpeDraft;
+  save();renderToday();fillForm(false);renderHead();burst();toast('打卡成功!今天的你又赢了一天 🎉');
+});
+['fContent','fNote','fWt'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    const rr=ensureRec(todayKey());
+    if(id==='fContent')rr.contentDraft=document.getElementById(id).value;
+    if(id==='fNote')rr.noteDraft=document.getElementById(id).value;
+    if(id==='fWt')rr.wtDraft=document.getElementById(id).value;
+    save();
+  });
+});
+
+/* ================= 记录 ================= */
+function renderRecords(){
+  const list=Object.values(S.checkins).filter(c=>c.completed).sort((a,b)=>b.date.localeCompare(a.date));
+  const totalMin=list.reduce((a,c)=>a+(c.duration||0),0);
+  const weekDone=(()=>{const n=new Date();const mon=new Date(n);mon.setDate(n.getDate()-((n.getDay()+6)%7));return list.filter(c=>c.date>=keyOf(mon)).length;})();
+  document.getElementById('statBox').innerHTML=
+    '<div class="stat"><div class="v">'+streakNow()+'</div><div class="k">连续打卡(天)</div></div>'+
+    '<div class="stat"><div class="v">'+weekDone+'/7</div><div class="k">本周完成</div></div>'+
+    '<div class="stat"><div class="v">'+totalMin+'</div><div class="k">累计分钟</div></div>'+
+    '<div class="stat"><div class="v">'+list.length+'</div><div class="k">总打卡次数</div></div>';
+  if(!list.length){document.getElementById('recList').innerHTML='<div class="empty">还没有打卡记录,今晚就是第一次~ 🌱</div>';return;}
+  document.getElementById('recList').innerHTML=list.map(c=>{
+    const rp=RPE_OPTS.find(x=>x.v===c.rpe);
+    return '<div class="rec"><div class="body">'+
+      '<div class="l1">'+c.date+' '+WDN[new Date(c.date+'T00:00:00').getDay()]+(c.theme?'<span class="sep">·</span>'+c.theme:'')+'<span class="sep">·</span>'+(c.duration||0)+'分钟<span class="sep">·</span>'+(rp?rp.e+' '+rp.l:'')+(c.weight?'<span class="sep">·</span><span class="tag t-blue">体重 '+c.weight+'kg</span>':'')+'</div>'+
+      '<div class="l2">'+(c.note?esc(c.note):esc((c.content||'').slice(0,60)))+'</div>'+
+      '</div>'+
+      '<button class="del" data-k="'+c.date+'">✕</button></div>';
+  }).join('');
+  document.querySelectorAll('#recList .del').forEach(b=>b.addEventListener('click',()=>{
+    if(confirm('删除 '+b.getAttribute('data-k')+' 的打卡记录?')){delete S.checkins[b.getAttribute('data-k')];save();renderRecords();renderHead();renderToday();}
+  }));
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* ================= 体重 ================= */
+let wtChart=null;
+function renderWeight(){
+  const pts=Object.values(S.checkins).filter(c=>c.weight).sort((a,b)=>a.date.localeCompare(b.date));
+  const box=document.getElementById('wtStats');
+  if(!pts.length){box.innerHTML='';document.getElementById('wtHint').style.display='block';return;}
+  document.getElementById('wtHint').style.display='none';
+  const first=pts[0].weight,last=pts[pts.length-1].weight,diff=Math.round((last-first)*10)/10;
+  box.innerHTML=
+    '<div class="stat"><div class="v">'+last+'</div><div class="k">最新体重 kg</div></div>'+
+    '<div class="stat"><div class="v">'+first+'</div><div class="k">首次记录 kg</div></div>'+
+    '<div class="stat"><div class="v" style="color:'+(diff>0?'#E0913B':(diff<0?'#3E9A78':'#8E7C96'))+'">'+(diff>0?'+':'')+diff+'</div><div class="k">变化 kg(紧致比数字重要)</div></div>';
+  setTimeout(()=>{
+    if(!window.Chart){return;}
+    const ctx=document.getElementById('wtChart');
+    if(wtChart){wtChart.destroy();}
+    wtChart=new Chart(ctx,{type:'line',
+      data:{labels:pts.map(p=>p.date.slice(5).replace('-','/')),datasets:[{data:pts.map(p=>p.weight),borderColor:'#F49BB6',backgroundColor:'rgba(244,155,182,.15)',fill:true,tension:.35,pointBackgroundColor:'#F49BB6',pointRadius:4,pointHoverRadius:6}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'体重 '+c.parsed.y+' kg'}}},scales:{y:{grid:{color:'#F6E8EF'},ticks:{color:'#A796AF'}},x:{grid:{display:false},ticks:{color:'#A796AF'}}}}});
+  },80);
+}
+
+/* ================= 设置 ================= */
+document.getElementById('setTime').value=S.settings.reminderTime;
+document.getElementById('btnSync').addEventListener('click',async()=>{
+  const t=document.getElementById('setTime').value;
+  if(!t){toast('先选一个时间');return;}
+  const parts=t.split(':'),cron=parseInt(parts[1],10)+' '+parseInt(parts[0],10)+' * * *';
+  if(!window.cowork||!window.cowork.callMcpTool){
+    S.settings.reminderTime=t;save();
+    document.getElementById('syncNote').textContent='已记为 '+t+';定时任务同步需要回到对话里说「把健身提醒改到'+t+'」';
+    toast('已保存本页显示;要真正改提醒时间,回到对话里告诉我一声');
+    return;
+  }
+  toast('正在同步…');
+  try{
+    const r=await window.cowork.callMcpTool('mcp__scheduled-tasks__update_scheduled_task',{taskId:'daily-fitness-30min',cronExpression:cron});
+    if(r&&r.isError){
+      toast('同步失败,回到对话里说「把健身提醒改到'+t+'」也可以');
+    }else{
+      S.settings.reminderTime=t;save();
+      document.getElementById('syncNote').textContent='当前提醒:'+t+' ✅ 已同步到 Claude 定时任务';
+      toast('成功!以后每晚 '+t+' 提醒你 🍬');
+    }
+  }catch(e){toast('同步失败,回到对话里说「把健身提醒改到'+t+'」也可以');}
+});
+document.getElementById('btnCopy').addEventListener('click',async()=>{
+  const txt=JSON.stringify(S);
+  try{await navigator.clipboard.writeText(txt);toast('已复制!粘贴到备忘录即可备份');}
+  catch(e){const ta=document.getElementById('restoreTa');document.getElementById('restoreRow').style.display='block';ta.value=txt;toast('已放入下方文本框,长按复制');}
+});
+document.getElementById('btnRestore').addEventListener('click',()=>{const row=document.getElementById('restoreRow');row.style.display=row.style.display==='none'?'block':'none';});
+document.getElementById('btnRestoreGo').addEventListener('click',()=>{
+  try{
+    const p=JSON.parse(document.getElementById('restoreTa').value);
+    if(!p.checkins||!p.settings)throw 0;
+    S=p;save();renderAll();document.getElementById('setTime').value=S.settings.reminderTime;
+    toast('数据恢复成功 ✅');
+  }catch(e){toast('数据格式不对,确认粘贴的是完整备份');}
+});
+document.getElementById('btnClear').addEventListener('click',()=>{
+  if(confirm('确定清空所有打卡记录?此操作不可恢复(建议先复制备份)')){
+    S={checkins:{},settings:S.settings,timer:{acc:0,start:null}};save();renderAll();
+    toast('已清空,重新开始 🌱');
+  }
+});
+
+/* ================= 通用 ================= */
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600);}
+function burst(){
+  const c=document.getElementById('confetti');c.innerHTML='';
+  const emo=['🎉','✨','🍬','💪','⭐'];
+  for(let i=0;i<16;i++){const s=document.createElement('span');s.textContent=emo[i%emo.length];s.style.left=(Math.random()*100)+'%';s.style.animationDelay=(Math.random()*.35)+'s';c.appendChild(s);}
+  setTimeout(()=>{c.innerHTML='';},1900);
+}
+function renderHead(){
+  const d=new Date();
+  document.getElementById('headDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · 开始日 2026-10-08 · 目标:体态矫正+紧致塑形';
+  document.getElementById('headStreak').textContent='🔥 连续打卡 '+streakNow()+' 天';
+}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('nav button').forEach(x=>{x.classList.remove('active');x.style.background='#fff';x.style.color='#8E7C96';});
+  b.classList.add('active');
+  const map={today:['#FFE4EE','#D66A93'],diet:['#E2F6ED','#3E9A78'],records:['#FFF3D9','#C08A2D'],weight:['#E5F4FC','#4A93BF'],settings:['#EEE9FB','#8368C9']};
+  const m=map[b.dataset.tab]||['#FFE4EE','#D66A93'];
+  b.style.background=m[0];b.style.color=m[1];
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('show'));
+  document.getElementById('tab-'+b.dataset.tab).classList.add('show');
+  if(b.dataset.tab==='records')renderRecords();
+  if(b.dataset.tab==='weight')renderWeight();
+}));
+function renderAll(){renderHead();renderToday();fillForm(true);}
+renderAll();tmTick();
+</script>
+</body>
+</html>
