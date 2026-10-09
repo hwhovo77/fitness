@@ -333,6 +333,25 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
     <p class="note">邮件渠道暂未接入(还没有可用的邮件工具)。目前提醒通过 App 通知发送;以后在 Claude 里接入邮件连接器后,每晚提醒会自动同步发送到这个邮箱,不用重新设置。</p>
   </div>
   <div class="card">
+    <h3>☁️ 云同步(GitHub 私有仓库)</h3>
+    <p class="sub">把打卡数据自动同步到你 GitHub 的私有仓库,换设备、换浏览器、清缓存都不丢。每台设备粘贴一次令牌即可。</p>
+    <div class="form-row">
+      <label>私有仓库(格式:用户名/仓库名)</label>
+      <input type="text" id="cloudRepo" placeholder="hwhovo77/fitness-data">
+    </div>
+    <div class="form-row">
+      <label>访问令牌(只授权这一个仓库的读写,粘贴一次存在本机)</label>
+      <input type="password" id="cloudToken" placeholder="github_pat_ 开头">
+    </div>
+    <div class="setting-line">
+      <button class="mini mint" id="btnCloudSave">💾 保存并测试连接</button>
+      <button class="mini" id="btnCloudSync">🔄 立即同步</button>
+      <button class="mini gray" id="btnCloudOff">断开</button>
+    </div>
+    <p class="note">状态:<span id="cloudStat">未配置</span></p>
+    <p class="note">打开页面自动拉取云端最新数据,打卡后约3秒自动推送;云端文件是私有仓库里的 data.json,自带历史版本记录。注:云同步请用浏览器打开的网页版(Claude 内置预览网络受限,连不上属正常)。</p>
+  </div>
+  <div class="card">
     <h3>💾 数据备份与恢复</h3>
     <div class="setting-line">
       <button class="mini mint" id="btnExport">📤 导出备份文件</button>
@@ -460,7 +479,7 @@ function load(){
   try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);if(p&&p.checkins&&p.settings)return p;}}catch(e){}
   return {checkins:{},settings:{reminderTime:'21:10',email:'402273397@qq.com'},timer:{acc:0,start:null}};
 }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(skip){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}if(!skip&&typeof schedulePush==='function')schedulePush();}
 
 function pad(n){return String(n).padStart(2,'0')}
 function keyOf(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
@@ -852,7 +871,7 @@ document.getElementById('fileIn').addEventListener('change',(e)=>{
   rd.readAsText(f);
 });
 document.getElementById('btnCopy').addEventListener('click',async()=>{
-  const txt=JSON.stringify(S);
+  const txt=exportState();
   try{await navigator.clipboard.writeText(txt);toast('已复制!粘贴到备忘录即可备份');}
   catch(e){const ta=document.getElementById('restoreTa');document.getElementById('restoreRow').style.display='block';ta.value=txt;toast('已放入下方文本框,长按复制');}
 });
@@ -870,6 +889,107 @@ document.getElementById('btnClear').addEventListener('click',()=>{
     S={checkins:{},settings:S.settings,timer:{acc:0,start:null}};save();renderAll();
     toast('已清空,重新开始 🌱');
   }
+});
+
+/* ================= 云同步(GitHub 私有仓库) ================= */
+function cloudCfg(){return (S.settings.cloud&&S.settings.cloud.token)?S.settings.cloud:null}
+let pulling=false,pulledSnapshot='';
+function ghHeaders(){return {Authorization:'Bearer '+S.settings.cloud.token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}}
+function b64en(s){return btoa(unescape(encodeURIComponent(s)))}
+function b64dec(s){return decodeURIComponent(escape(atob(String(s).replace(/\n/g,''))))}
+function exportState(){
+  const c=Object.assign({},S);
+  if(c.settings&&c.settings.cloud&&c.settings.cloud.token){c.settings=Object.assign({},c.settings,{cloud:Object.assign({},c.settings.cloud,{token:''})});}
+  return JSON.stringify(c);
+}
+function mergeState(local,remote){
+  if(!remote||!remote.checkins)return local;
+  const out={checkins:{},settings:local.settings,timer:local.timer};
+  new Set(Object.keys(local.checkins).concat(Object.keys(remote.checkins))).forEach(d=>{
+    const a=local.checkins[d],b=remote.checkins[d];
+    if(a&&b)out.checkins[d]=(a.completed||!b.completed)?a:b;
+    else out.checkins[d]=a||b;
+  });
+  return out;
+}
+function schedulePush(){
+  if(pulling||!cloudCfg())return;
+  clearTimeout(schedulePush._h);
+  schedulePush._h=setTimeout(cloudPush,3000);
+}
+function updateCloudUI(ok,msg){
+  const el=document.getElementById('cloudStat');
+  if(!el)return;
+  if(!cloudCfg()){el.innerHTML='未配置';return;}
+  el.innerHTML=ok?('已连接 ✅'+(S.settings.cloud.lastSync?' · 最近同步:'+S.settings.cloud.lastSync:'')):(msg||'连接异常');
+}
+async function cloudPull(){
+  if(!cloudCfg())return;
+  pulling=true;
+  try{
+    const c=S.settings.cloud;
+    const r=await fetch('https://api.github.com/repos/'+c.repo+'/contents/data.json',{headers:ghHeaders()});
+    if(r.status===404){pulling=false;schedulePush();return;}
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    let remote=null;try{remote=JSON.parse(b64dec(j.content));}catch(e){}
+    const merged=mergeState(S,remote);
+    const snap=JSON.parse(JSON.stringify(merged));
+    if(snap.settings.cloud&&snap.settings.cloud.token)snap.settings.cloud.token='';
+    pulledSnapshot=JSON.stringify(snap);
+    S=merged;
+    save(true);renderAll();document.getElementById('setTime').value=S.settings.reminderTime;
+    fillCloud();
+  }catch(e){updateCloudUI(false,'拉取失败,稍后重试');}
+  pulling=false;
+}
+async function cloudPush(){
+  if(!cloudCfg())return;
+  const c=S.settings.cloud;
+  const payload=exportState();
+  if(payload===pulledSnapshot)return;
+  try{
+    let sha=null;
+    const g=await fetch('https://api.github.com/repos/'+c.repo+'/contents/data.json',{headers:ghHeaders()});
+    if(g.ok){const j=await g.json();sha=j.sha;}
+    else if(g.status!==404)throw 0;
+    const h=Object.assign({'Content-Type':'application/json'},ghHeaders());
+    const body=JSON.stringify(Object.assign({message:'sync '+todayKey()+' '+new Date().toTimeString().slice(0,5),content:b64en(payload)},sha?{sha:sha}:{}));
+    const p=await fetch('https://api.github.com/repos/'+c.repo+'/contents/data.json',{method:'PUT',headers:h,body:body});
+    if(!p.ok)throw 0;
+    pulledSnapshot=payload;
+    S.settings.cloud.lastSync=new Date().toLocaleString('zh-CN');save(true);
+    updateCloudUI(true);
+  }catch(e){updateCloudUI(false,'推送失败,数据仍保存在本地');}
+}
+function fillCloud(){
+  const c=S.settings.cloud||{};
+  const r=document.getElementById('cloudRepo'),t=document.getElementById('cloudToken');
+  if(r&&!r.value)r.value=c.repo||'hwhovo77/fitness-data';
+  if(t)t.value=c.token||'';
+  updateCloudUI(true);
+}
+document.getElementById('btnCloudSave').addEventListener('click',async()=>{
+  const repo=document.getElementById('cloudRepo').value.trim();
+  const token=document.getElementById('cloudToken').value.trim();
+  if(!repo||repo.indexOf('/')<0||!token){toast('仓库格式「用户名/仓库名」,令牌以 github_pat_ 开头');return;}
+  S.settings.cloud={repo:repo,token:token,lastSync:''};save(true);
+  toast('正在测试连接…');
+  try{
+    const r=await fetch('https://api.github.com/repos/'+repo+'/contents/data.json',{headers:ghHeaders()});
+    if(r.status===404){updateCloudUI(true);toast('连接成功!云端还没有数据,正在上传当前记录');cloudPush();}
+    else if(r.ok){updateCloudUI(true);toast('连接成功!正在拉取云端数据');cloudPull();}
+    else if(r.status===401||r.status===403){S.settings.cloud={repo:repo,token:'',lastSync:''};save(true);fillCloud();toast('令牌无效或权限不足:确认令牌勾选了该仓库+Contents读写');}
+    else throw 0;
+  }catch(e){toast('连不上 GitHub,检查网络后重试');}
+});
+document.getElementById('btnCloudSync').addEventListener('click',()=>{
+  if(!cloudCfg()){toast('先填仓库和令牌并保存');return;}
+  toast('正在同步…');cloudPull();
+});
+document.getElementById('btnCloudOff').addEventListener('click',()=>{
+  if(!cloudCfg()){toast('本来就是未配置状态');return;}
+  if(confirm('断开云同步?本地数据和云端仓库都保留,只是不再自动同步')){S.settings.cloud={repo:(S.settings.cloud||{}).repo||'',token:'',lastSync:''};save(true);fillCloud();toast('已断开,数据仍在本地');}
 });
 
 /* ================= 通用 ================= */
@@ -900,7 +1020,7 @@ function switchTab(name){
 }
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{switchTab(b.dataset.tab);}));
 function renderAll(){renderHead();renderToday();fillForm(true);renderDietToday();}
-renderAll();tmTick();
+renderAll();tmTick();fillCloud();if(cloudCfg())cloudPull();
 </script>
 </body>
 </html>
