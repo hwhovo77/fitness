@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>马卡龙健身打卡 🧁</title>
+<title>小蛋的健身日记 🧁</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root{color-scheme:light}
@@ -15,35 +15,36 @@ header h1{font-size:22px;letter-spacing:1px}
 header .date{color:#8E7C96;font-size:13px;margin-top:4px}
 .streak{display:inline-block;margin-top:8px;background:#FFE4EE;color:#D66A93;border-radius:999px;padding:4px 14px;font-size:13px;font-weight:600}
 nav{position:sticky;top:0;z-index:20;background:rgba(253,243,246,.94);backdrop-filter:blur(8px);padding:10px 0 8px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-nav button{border:none;background:#fff;color:#8E7C96;border-radius:999px;padding:7px 15px;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(233,180,200,.28);transition:.15s}
-nav button.active{color:#fff;font-weight:600}
+nav button{border:none;background:#fff;color:#8E7C96;border-radius:999px;padding:7px 14px;font-size:14px;cursor:pointer;box-shadow:0 3px 10px rgba(233,180,200,.28);transition:.15s}
 section.tab{display:none;animation:fadein .25s}
 section.tab.show{display:block}
 @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
 .card{background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:16px;margin-top:12px}
-.card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.card h3{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .sub{color:#8E7C96;font-size:13px;line-height:1.7}
 .tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600}
 .t-pink{background:#FFE4EE;color:#D66A93}.t-mint{background:#E2F6ED;color:#3E9A78}.t-blue{background:#E5F4FC;color:#4A93BF}.t-lemon{background:#FFF3D9;color:#C08A2D}.t-purple{background:#EEE9FB;color:#8368C9}
 .today-head{display:flex;align-items:center;gap:10px;margin-top:12px;background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:18px}
 .today-head .big{font-size:40px}
 .today-head h2{font-size:19px}
-.today-head .focus{font-size:13px;color:#8E7C96;margin-top:3px}
+.today-head .focus{font-size:13px;color:#8E7C96;margin-top:3px;line-height:1.5}
 .adjust{margin-top:12px;border-radius:18px;padding:13px 16px;font-size:13.5px;line-height:1.6}
 .adjust b{font-size:14px}
 .a-normal{background:#E5F4FC}.a-light{background:#E2F6ED}.a-plus{background:#FFE4EE}
 .weekstrip{display:flex;gap:6px;margin-top:12px;background:#fff;border-radius:18px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:12px 10px;justify-content:space-between}
-.wd{flex:1;text-align:center;font-size:11px;color:#8E7C96}
+.wd{flex:1;text-align:center;font-size:11px;color:#8E7C96;cursor:pointer}
 .wd .dot{width:30px;height:30px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;background:#F7ECF1}
 .wd .dot.done{color:#fff}
 .wd .dot.today{outline:2.5px dashed #F49BB6;outline-offset:2px}
 .wd .dot.rest{background:#EDF7F1}
-.item{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px dashed #F4E4EC}
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 4px;border-bottom:1px dashed #F4E4EC;cursor:pointer}
 .item:last-child{border-bottom:none}
-.item .ck{width:26px;height:26px;min-width:26px;border-radius:50%;border:2px solid #F2C4D6;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#fff;transition:.15s}
+.item .ck{width:26px;height:26px;min-width:26px;border-radius:50%;border:2px solid #F2C4D6;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#fff;transition:.15s;margin-top:2px}
 .item .ck.on{background:#F49BB6;border-color:#F49BB6}
 .item .nm{font-size:14.5px;flex:1}
-.item .dt{font-size:12.5px;color:#8E7C96;white-space:nowrap}
+.item .dt{font-size:12.5px;color:#8E7C96;white-space:nowrap;margin-top:2px}
+.kfocus{font-size:11.5px;color:#A796AF;margin-top:3px;line-height:1.5}
+.cuedetail{font-size:12.5px;color:#6B5A73;background:#FFF7FA;border-radius:10px;padding:9px 12px;margin:0 4px 8px 36px;line-height:1.7;display:none}
 .timer{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap}
 .timer .disp{font-size:34px;font-weight:700;color:#D66A93;font-variant-numeric:tabular-nums;letter-spacing:2px}
 .mini{border:none;border-radius:999px;padding:8px 16px;font-size:13px;cursor:pointer;background:#FFE4EE;color:#D66A93;font-weight:600}
@@ -51,7 +52,7 @@ section.tab.show{display:block}
 .mini.mint{background:#E2F6ED;color:#3E9A78}
 .form-row{margin-top:12px}
 .form-row label{font-size:13px;color:#8E7C96;display:block;margin-bottom:6px}
-input[type=number],input[type=time],textarea{width:100%;border:1.5px solid #F0DEE8;border-radius:12px;padding:9px 12px;font-size:15px;color:#4A3B52;background:#FFFBFD;outline:none;font-family:inherit}
+input[type=number],input[type=time],input[type=text],textarea{width:100%;border:1.5px solid #F0DEE8;border-radius:12px;padding:9px 12px;font-size:15px;color:#4A3B52;background:#FFFBFD;outline:none;font-family:inherit}
 input:focus,textarea:focus{border-color:#F49BB6}
 textarea{resize:vertical;min-height:64px;font-size:13.5px}
 .rpes,.moods{display:flex;gap:8px;flex-wrap:wrap}
@@ -81,6 +82,9 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
 .m-break{background:#FFF3D9}.m-lunch{background:#E2F6ED}.m-snack{background:#FFEEE2}.m-dinner{background:#E5F4FC}.m-post{background:#EEE9FB}
 .meal h4{font-size:14.5px;margin-bottom:6px}
 .meal p{font-size:12.8px;color:#6B5A73;line-height:1.65}
+.drow{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed #F4E4EC;font-size:13.5px;line-height:1.65;align-items:flex-start}
+.drow .ic{font-size:18px}
+.drow b{color:#96587A}
 .light-box{background:#F0FAF4;border-radius:14px;padding:12px}
 .light-box ul{list-style:none}
 .light-box li{font-size:13px;line-height:1.8;padding-left:20px;position:relative}
@@ -89,7 +93,7 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
 .lb-yellow li::before{content:"🟡"}
 .lb-red li::before{content:"🔴"}
 .recipe{background:#fff;border-radius:16px;box-shadow:0 6px 18px rgba(233,180,200,.25);padding:14px}
-.recipe h4{font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.recipe h4{font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
 .recipe .meta{display:flex;gap:6px;margin:8px 0}
 .recipe .ing{font-size:12.5px;color:#8E7C96;line-height:1.6}
 .recipe .steps{font-size:13px;line-height:1.7;color:#5D4A66;margin-top:8px}
@@ -99,24 +103,43 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
 .tipcard{background:#FFE4EE;border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.7;color:#96587A}
 .setting-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
 .note{font-size:12px;color:#A796AF;line-height:1.6;margin-top:8px}
+.phead{display:flex;gap:10px;align-items:center;cursor:pointer}
+.phead .pemoji{font-size:26px}
+.phead b{font-size:15px}
+.phead .pf{font-size:12px;color:#8E7C96;margin-top:2px;line-height:1.5}
+.phead .arr{margin-left:auto;color:#C9B6D0;font-size:12px}
+.pbody{margin-top:10px;border-top:1px dashed #F4E4EC;padding-top:8px}
+.pline{font-size:13px;color:#8E7C96;line-height:1.7;margin:6px 0}
+.pitem{background:#FFFBFD;border-radius:12px;padding:10px 12px;margin:8px 0}
+.pname{font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pk{font-size:12.5px;color:#96587A;margin-top:5px;line-height:1.6}
+.phow{font-size:12.5px;color:#6B5A73;margin-top:5px;line-height:1.75}
+.chatlist{height:320px;overflow-y:auto;padding:6px 2px;display:flex;flex-direction:column}
+.msg{max-width:85%;border-radius:14px;padding:9px 13px;font-size:13.5px;line-height:1.65;margin:6px 0;white-space:pre-wrap}
+.msg.u{background:#FFE4EE;margin-left:auto;color:#7A4560}
+.msg.b{background:#F3EDF5;margin-right:auto;color:#4A3B52}
+.chatin{display:flex;gap:8px;margin-top:10px}
+.chatin input{flex:1;border-radius:999px}
+.empty{text-align:center;color:#B9A8C4;font-size:13px;padding:26px 10px;line-height:1.8}
 #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:#4A3B52;color:#fff;border-radius:999px;padding:10px 22px;font-size:14px;transition:.3s;opacity:0;z-index:100;max-width:86%;text-align:center}
 #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 #confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
 #confetti span{position:absolute;top:105%;font-size:22px;animation:fly 1.5s ease-out forwards}
 @keyframes fly{to{transform:translateY(-125vh) rotate(320deg);opacity:0}}
-.empty{text-align:center;color:#B9A8C4;font-size:13px;padding:26px 0}
 </style>
 </head>
 <body>
 <header>
-  <h1>🧁 马卡龙健身打卡</h1>
+  <h1>🧁 小蛋的健身日记</h1>
   <div class="date" id="headDate"></div>
   <div class="streak" id="headStreak">🔥 连续 0 天</div>
 </header>
 
 <nav>
   <button data-tab="today" class="active" style="background:#FFE4EE;color:#D66A93">💪 今日</button>
+  <button data-tab="plan">📅 计划</button>
   <button data-tab="diet">🍱 饮食</button>
+  <button data-tab="chat">💬 问答</button>
   <button data-tab="records">📋 记录</button>
   <button data-tab="weight">⚖️ 体重</button>
   <button data-tab="settings">⚙️ 设置</button>
@@ -135,7 +158,7 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
       <button class="mini gray" id="tmPause">⏸ 暂停</button>
       <button class="mini gray" id="tmReset">↺ 清零</button>
     </div>
-    <p class="note" style="text-align:center">练完打卡时会自动带上时长~</p>
+    <p class="note" style="text-align:center">练完打卡时会自动带上时长~ 点动作名字可以展开动作要领</p>
   </div>
   <div class="card" id="checkinCard">
     <h3>✅ 今日打卡</h3>
@@ -167,8 +190,18 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
   </div>
 </section>
 
+<!-- ============ 计划 ============ -->
+<section class="tab" id="tab-plan">
+  <div class="card">
+    <h3>📅 一周训练计划</h3>
+    <p class="sub">点任意一天展开,查看当天目标、每个动作「练什么」和「动作要领」。今天的那天默认展开。</p>
+  </div>
+  <div id="planBox"></div>
+</section>
+
 <!-- ============ 饮食 ============ -->
 <section class="tab" id="tab-diet">
+    <div id="dietToday"></div>
   <div class="card">
     <h3>🎯 你的饮食总原则</h3>
     <p class="sub">体重正常(160cm / 53.2kg)的你<b>不需要节食</b>。要做的是「身体重组」:蛋白质吃够 + 少糖少油炸 + 正常吃。吃够蛋白,练出来的才紧致有线条。</p>
@@ -248,6 +281,21 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
   </div>
 </section>
 
+<!-- ============ 问答 ============ -->
+<section class="tab" id="tab-chat">
+  <div class="card">
+    <h3>💬 训练问答</h3>
+    <div class="chatlist" id="chatList">
+      <div class="empty">问我任何训练和饮食问题,比如:<br>「深蹲怎么做?」「我今天练什么?」<br>「我这周练得怎么样?」「骨盆前倾怎么改善?」</div>
+    </div>
+    <div class="chatin">
+      <input type="text" id="chatQ" placeholder="输入问题,回车或点发送">
+      <button class="mini" id="chatSend">发送</button>
+    </div>
+    <p class="note" id="chatMode"></p>
+  </div>
+</section>
+
 <!-- ============ 记录 ============ -->
 <section class="tab" id="tab-records">
   <div class="stats" id="statBox"></div>
@@ -287,13 +335,17 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
   <div class="card">
     <h3>💾 数据备份与恢复</h3>
     <div class="setting-line">
-      <button class="mini mint" id="btnCopy">📋 复制全部数据</button>
+      <button class="mini mint" id="btnExport">📤 导出备份文件</button>
+      <button class="mini mint" id="btnFileIn2">📥 导入备份文件</button>
+      <button class="mini gray" id="btnCopy">📋 复制全部数据</button>
       <button class="mini gray" id="btnRestore">📥 从文本恢复</button>
       <button class="mini gray" id="btnClear" style="background:#FFE9E9;color:#C05B5B">🗑 清空数据</button>
     </div>
+    <input type="file" id="fileIn" accept=".json,application/json" style="display:none">
+    <p class="note">数据存在浏览器本地,建议每周点「导出备份文件」存一份(发到微信文件传输助手/网盘都行);换浏览器或换设备时,导入备份文件即可全部恢复。注意:清除浏览数据、无痕模式、卸载浏览器会让数据丢失;iPhone Safari 连续7天不打开本站可能被自动清理,定期备份最稳。</p>
     <div class="form-row" id="restoreRow" style="display:none">
       <label>把之前复制的备份数据粘贴到这里,点「恢复」:</label>
-      <textarea id="restoreTa" placeholder='粘贴备份数据(JSON)'></textarea>
+      <textarea id="restoreTa" placeholder="粘贴备份数据(JSON)"></textarea>
       <button class="mini mint" id="btnRestoreGo" style="margin-top:8px">恢复</button>
     </div>
     <p class="note">数据保存在本页面,建议偶尔复制一份备份。换设备时可用「恢复」搬过去。</p>
@@ -308,51 +360,100 @@ textarea{resize:vertical;min-height:64px;font-size:13.5px}
 <script>
 /* ================= 数据与状态 ================= */
 const KEY='macaronFitnessV1';
-const WEEK=[ // index = getDay()
- {name:'休息日',emoji:'🛌',color:'#CFE8DC',focus:'恢复日 · 肌肉在休息时生长',
+const WEEK=[ // index = getDay(),忌口已避开;每个动作: k=练什么,how=动作要领
+ {name:'休息日',title:'主动休息日',emoji:'🛌',color:'#CFE8DC',focus:'散步放松 · 恢复身体 · 肌肉生长',
   warmup:'散步或轻活动5分钟(可选)',
-  items:[{n:'完全休息',d:'最多散步20-30分钟',adj:false},{n:'全身轻拉伸',d:'5分钟,想动就做',adj:false}],
+  items:[
+    {n:'散步',d:'20-30分钟,速度随意',k:'促进血液循环,帮助肌肉恢复,消水肿',how:'穿舒服的鞋,饭后一小时进行;走到微微出汗就可以,不用赶速度。',adj:false},
+    {n:'全身轻拉伸',d:'5分钟,想动就做',k:'缓解僵硬,保持柔韧性',how:'每个部位轻轻拉到有牵拉感就行,保持20-30秒,不要弹震式用力拉。',adj:false}],
   stretch:'想拉伸就做几个喜欢的动作',
   tip:'肌肉是在休息时长的——今天理直气壮地休息~'},
- {name:'背部日',emoji:'🦋',color:'#B9A7EC',focus:'练背 · 改善圆肩驼背',
+ {name:'背部日',title:'背部+体态矫正日',emoji:'🦋',color:'#B9A7EC',focus:'练背 · 改善圆肩驼背 · 让背显薄、站姿挺拔',
   warmup:'猫牛式10次 + 肩环绕20圈 + 手臂大绕环15圈',
-  items:[{n:'弹力带坐姿划船',s:3,r:12,t:'次',adj:true},{n:'弹力带面拉',s:3,r:15,t:'次',adj:true},{n:'俯身YTW',s:2,r:10,t:'次',adj:true},{n:'靠墙天使',s:2,r:10,t:'次',adj:true},{n:'哑铃俯身飞鸟(2kg)',s:2,r:12,t:'次',adj:true}],
-  stretch:'门框胸肌拉伸30s×2/侧 + 颈部侧向拉伸30s/侧',
-  tip:'划船时想象「用肘往后拉」、肩胛骨往中间夹——练背就是在治圆肩驼背'},
- {name:'核心日',emoji:'🍑',color:'#F49BB6',focus:'练腹 · 矫正骨盆前倾 · 瘦肚子',
+  items:[
+    {n:'弹力带坐姿划船',s:3,r:12,t:'次',k:'练背中部(菱形肌、中下斜方肌)——治圆肩驼背的主力动作',how:'坐在地上,腿伸直,弹力带绕过脚掌,两手抓两端;挺胸,想象用肘部往后拉,拉到手贴近肋骨两侧,肩胛骨往中间夹紧1秒再慢慢放回。注意:别耸肩、别低头、别靠惯性甩。',adj:true},
+    {n:'弹力带面拉',s:3,r:15,t:'次',k:'练肩后侧+肩外旋——把圆肩"拉回来"的王牌动作',how:'弹力带固定在与脸同高的位置(门把、架子),两手抓带,拇指朝后;拉向脸两侧,结束时手像"比耶"一样贴在耳边,停1秒慢放。注意:手肘别下垂,别憋气。',adj:true},
+    {n:'俯身YTW',s:2,r:10,t:'次',k:'练整个上背部+肩胛稳定——改善含胸,让肩背线条好看',how:'弯腰俯身(或趴在床边),手臂依次摆出Y、T、W三个字母,每个位置抬到手臂与身体齐平、拇指朝天花板,慢起慢落。注意:抬起时用肩胛发力,不要仰脖子。',adj:true},
+    {n:'靠墙天使',s:2,r:10,t:'次',k:'打开胸椎、激活下斜方——随时随地能做的体态自检+矫正动作',how:'背贴墙站,后脑勺、上背、臀贴墙,脚跟离墙10厘米;手臂贴墙摆成W形,沿墙慢慢上滑再下滑。注意:手背始终贴墙,腰不离墙(贴不上说明骨盆前倾,微收腹再试)。',adj:true},
+    {n:'哑铃俯身飞鸟(2kg)',s:2,r:12,t:'次',k:'练后肩+上背——提升背部细节线条',how:'俯身45度,膝盖微屈,两手持哑铃自然垂放;想象怀抱一棵大树,往两侧打开到与肩平,慢放。注意:别耸肩,肘部微屈固定,用后背和后肩发力。',adj:true}],
+  stretch:'门框胸肌拉伸30秒×2/侧 + 颈部侧向拉伸30秒/侧',
+  tip:'练背就是治圆肩驼背——划船时想象「用肘往后拉」、肩胛骨往中间夹'},
+ {name:'核心日',title:'核心+骨盆矫正日',emoji:'🍑',color:'#F49BB6',focus:'练腹肌核心 · 矫正骨盆前倾 · 瘦肚子、腰围变小',
   warmup:'猫牛式10次 + 站立骨盆前后倾10次(找中立位)',
-  items:[{n:'死虫式',s:3,r:10,t:'次/侧',adj:true},{n:'平板支撑',s:3,r:30,t:'秒',adj:true},{n:'臀桥',s:3,r:15,t:'次',adj:true},{n:'仰卧卷腹',s:3,r:12,t:'次',adj:true},{n:'侧平板支撑',s:2,r:15,t:'秒/侧',adj:true}],
-  stretch:'弓步髋屈肌拉伸30s/侧(治骨盆前倾必做!) + 婴儿式30s',
-  tip:'死虫式腰要贴地、平板别塌腰——质量 > 时长,腰一塌就白练'},
- {name:'腿臀日',emoji:'🍋',color:'#F7CE7A',focus:'练腿臀 · 改善小腿突出',
-  warmup:'原地踏步1分钟 + 开合跳30s×2 + 腿部摆动',
-  items:[{n:'徒手深蹲',s:3,r:15,t:'次',adj:true},{n:'箭步蹲',s:3,r:10,t:'次/侧',adj:true},{n:'单腿臀桥',s:3,r:10,t:'次/侧',adj:true},{n:'慢速提踵',s:3,r:20,t:'次',adj:true},{n:'勾脚尖(胫骨前肌)',s:3,r:15,t:'次/侧',adj:true}],
-  stretch:'下犬式小腿拉伸30s/侧 + 泡沫轴滚小腿1分钟/侧',
-  tip:'膝盖对准脚尖方向,提踵慢起慢落——今天顺便治小腿肚突出'},
- {name:'手臂肩日',emoji:'🌸',color:'#93CFEF',focus:'瘦手臂 · 练手臂肩部线条',
+  items:[
+    {n:'死虫式',s:3,r:10,t:'次/侧',k:'练深层腹肌(腹横肌)——骨盆前倾矫正第一动作,让小腹收紧',how:'仰卧,双手举向天花板,双腿抬起屈膝90度;腰用力贴地,对侧的手和脚同时慢慢伸直放低,再收回,换边。注意:全程腰贴地!腰一拱起来就减小幅度;呼气时伸展。',adj:true},
+    {n:'平板支撑',s:3,r:30,t:'秒',k:'练整个核心+肩部稳定——收紧腹部,练的就是"瘦肚子"那层天然束腰',how:'肘撑地,身体成一条直线;微收下巴,肋骨下压,臀部夹紧,正常呼吸。注意:塌腰=白练还伤腰,宁可少撑几秒也别塌;撑不住时先停下来。',adj:true},
+    {n:'臀桥',s:3,r:15,t:'次',k:'练臀大肌——把被骨盆前倾"睡着的臀"叫醒,顺便稳定骨盆',how:'仰卧屈膝踩地,脚跟贴近臀部;夹臀发力把臀抬到身体成一条直线,顶点夹紧2秒,慢放。注意:不要用腰把自己"顶"起来(顶过高会腰酸),膝盖对准脚尖。',adj:true},
+    {n:'仰卧卷腹',s:3,r:12,t:'次',k:'练腹直肌上段——腹部线条就是从这里来的',how:'仰卧屈膝,手轻扶耳边(别抱头);呼气时收下巴、卷起上背部到肩胛离地,停1秒慢放。注意:别用手拽头,别整个人坐起来(那是仰卧起坐,伤腰)。',adj:true},
+    {n:'侧平板支撑',s:2,r:15,t:'秒/侧',k:'练腹斜肌+侧链——收侧腰,让腰线显出来',how:'侧躺,肘撑在肩正下方,身体成一条直线抬起;可以从膝盖着地的简单版开始。注意:髋部别往后倒、别下沉;脖子放松看前方。',adj:true}],
+  stretch:'弓步髋屈肌拉伸30秒/侧(治骨盆前倾必做!) + 婴儿式30秒',
+  tip:'质量 > 时长——死虫式腰贴地、平板别塌腰,腰一塌就白练'},
+ {name:'腿臀日',title:'下肢+臀腿日',emoji:'🍋',color:'#F7CE7A',focus:'练腿臀 · 紧致腿部线条 · 改善小腿突出 · 提升每日燃脂',
+  warmup:'原地踏步1分钟 + 开合跳30秒×2 + 腿部摆动',
+  items:[
+    {n:'徒手深蹲',s:3,r:15,t:'次',k:'练大腿+臀整体——瘦腿第一步是练腿,肌肉紧了腿围反而小',how:'双脚与肩同宽,脚尖微微朝外;臀部往后坐像坐椅子,蹲到大腿至少与地面平行,脚跟发力站起。注意:膝盖对准脚尖方向、别内扣;脚跟全程别离地;上身可以前倾但背要挺直。',adj:true},
+    {n:'箭步蹲',s:3,r:10,t:'次/侧',k:'单腿练臀腿+平衡——改善两侧力量不均,翘臀效果好',how:'一脚向前跨一大步,后腿膝盖慢慢下放接近地面,前脚跟发力站起。注意:上身保持直立别前扑;膝盖不超过脚尖太多;扶墙或椅子保持平衡完全可以。',adj:true},
+    {n:'单腿臀桥',s:3,r:10,t:'次/侧',k:'孤立练单侧臀——比双腿臀桥更进阶,治"臀失忆"',how:'臀桥姿势,一只脚抬离地伸直,另一只脚踩地顶起臀部,顶点夹臀2秒。注意:两边高度不一样很正常,别硬追求高度,骨盆保持水平。',adj:true},
+    {n:'慢速提踵',s:3,r:20,t:'次',k:'练+拉伸小腿全段——慢起慢落让小腿变细长,而不是鼓包',how:'扶墙站立,脚跟慢慢抬到最高点停1秒,再用3秒慢慢落回。注意:慢是关键!快起快落只会让小腿更粗;全程感受小腿被拉长。',adj:true},
+    {n:'勾脚尖(胫骨前肌)',s:3,r:15,t:'次/侧',k:'练小腿前侧——平衡小腿前后力量,改善小腿肚外翻突出',how:'坐或站,脚尖用力勾向小腿(脚趾朝向脸),勾到顶停2秒再放松。注意:就是"勾脚"一个动作,做对的话小腿前侧会酸;坐在椅子上做最轻松。',adj:true}],
+  stretch:'下犬式小腿拉伸30秒/侧 + 泡沫轴滚小腿1分钟/侧',
+  tip:'练腿不会粗腿——肌肉紧致了,腿围反而会小;慢速提踵是治小腿突出的关键'},
+ {name:'手臂肩日',title:'上肢+瘦手臂日',emoji:'🌸',color:'#93CFEF',focus:'瘦手臂 · 紧致大臂线条 · 练肩显锁骨',
   warmup:'手臂环绕20圈×2 + 弹力带肩外旋15次×2',
-  items:[{n:'哑铃弯举(2kg)',s:3,r:15,t:'次',adj:true},{n:'哑铃颈后臂屈伸',s:3,r:12,t:'次',adj:true},{n:'弹力带三头下压',s:3,r:15,t:'次',adj:true},{n:'哑铃侧平举',s:3,r:12,t:'次',adj:true},{n:'弹力带推肩',s:3,r:12,t:'次',adj:true}],
-  stretch:'肱三头拉伸30s/侧 + 肱二头拉伸30s/侧',
-  tip:'举2秒放3秒,下放越慢越有效——2kg也能练出紧致线条'},
- {name:'全身循环日',emoji:'🍓',color:'#F28D9E',focus:'全身燃脂 · 紧致 · 提代谢',
-  warmup:'开合跳30s×3,间隔休息30s',
-  items:[{circuit:true,n:'全身循环',rounds:3,rest:'轮间休息90秒',adj:true,
-    moves:['深蹲 15次','弹力带划船 15次','跪姿俯卧撑 10次','登山跑 20次','臀桥 15次','开合跳 30秒']}],
-  stretch:'大腿前侧+后侧拉伸 各30s/侧',
+  items:[
+    {n:'哑铃弯举(2kg)',s:3,r:15,t:'次',k:'练肱二头肌(大臂前侧)——告别"拜拜肉"晃动的松弛感',how:'站直,两手各持一个哑铃自然垂放;大臂夹紧身体不动,只小臂弯起,举2秒、放3秒。注意:下放越慢越有效;别耸肩、别身体后仰借力。',adj:true},
+    {n:'哑铃颈后臂屈伸',s:3,r:12,t:'次',k:'练肱三头肌(大臂后侧)——"拜拜肉"就在这里,瘦手臂核心动作',how:'双手捧一个哑铃举过头;肘朝前固定不动,慢慢把哑铃放到脑后,再伸直手臂。注意:只有小臂在动,肘别往外张;感到大臂后侧酸就对了。',adj:true},
+    {n:'弹力带三头下压',s:3,r:15,t:'次',k:'三头肌另一个角度——让大臂后侧更紧致',how:'弹力带固定在头顶高度,面对它站好;大臂夹紧身体,小臂往下压到手臂伸直,慢慢放回。注意:肘部像钉在身体两侧一样不动。',adj:true},
+    {n:'哑铃侧平举',s:3,r:12,t:'次',k:'练肩中束——肩变圆润有线条,显锁骨、显腰细',how:'两手持哑铃垂放体侧;肘部微屈固定,往两侧平举到与肩同高,慢放。注意:举到肩高就够,别耸肩(耸肩是斜方肌代偿);举不动就换弹力带。',adj:true},
+    {n:'弹力带推肩',s:3,r:12,t:'次',k:'练整个肩部+上臂——肩型挺拔,穿衣好看',how:'踩住弹力带,两手抓带提到肩两侧;向上推直过头,慢慢放回肩侧。注意:核心收紧别塌腰,别仰头;推起时呼气。',adj:true}],
+  stretch:'肱三头拉伸30秒/侧 + 肱二头拉伸30秒/侧',
+  tip:'举2秒放3秒——下放越慢越有效,2公斤哑铃也能练出紧致线条'},
+ {name:'全身循环日',title:'全身+心肺燃脂日',emoji:'🍓',color:'#F28D9E',focus:'全身燃脂 · 紧致全身 · 提升心肺和代谢',
+  warmup:'开合跳30秒×3,间隔休息30秒',
+  items:[
+    {circuit:true,n:'全身循环',rounds:3,rest:'轮间休息90秒',adj:true,
+     moves:[
+      {n:'深蹲 15次',k:'燃大腿和臀',how:'同周三深蹲要点,节奏可以稍快,但动作别变形。'},
+      {n:'弹力带划船 15次',k:'带上背部',how:'站姿踩住弹力带,肘往后拉、肩胛骨夹紧,别耸肩。'},
+      {n:'跪姿俯卧撑 10次',k:'练胸+大臂后侧',how:'膝盖跪地撑起上半身,手比肩略宽;胸口靠近地面再推起,身体成一条直线,别塌腰。'},
+      {n:'登山跑 20次',k:'燃腹+心肺',how:'俯撑姿势,双腿交替快速提膝向胸口;核心收紧,屁股别翘太高。'},
+      {n:'臀桥 15次',k:'收尾练臀',how:'同周二臀桥要点,顶点夹臀2秒。'},
+      {n:'开合跳 30秒',k:'燃脂收尾',how:'落地屈膝缓冲,轻落地;累了就放慢节奏,别直接停。'}]}],
+  stretch:'大腿前侧+后侧拉伸 各30秒/侧',
   tip:'循环日有点喘才有效,但动作别变形——宁可慢,不要乱'},
- {name:'体态矫正日',emoji:'🌿',color:'#8FD8BD',focus:'主动恢复 · 体态改善黄金日',
+ {name:'体态矫正日',title:'拉伸+体态矫正日',emoji:'🌿',color:'#8FD8BD',focus:'主动恢复 · 体态改善黄金日 · 放松紧张肌群',
   warmup:'慢走或原地踏步3分钟',
-  items:[{n:'泡沫轴放松',d:'上背2分钟·大腿前后外侧各2分钟·小腿各1.5分钟',adj:false},
-    {n:'静态拉伸',d:'门框胸肌/弓步髋屈肌/下犬小腿/婴儿式,各30s×2',adj:false},
-    {n:'靠墙天使',s:3,r:10,t:'次',adj:true},
-    {n:'收下巴(保持5秒)',s:3,r:10,t:'次',adj:true},
-    {n:'骨盆中立位控制',s:3,r:10,t:'次',adj:true}],
+  items:[
+    {n:'泡沫轴放松',d:'上背2分钟·大腿前后外侧各2分钟·小腿各1.5分钟',k:'放松紧张肌肉——圆肩驼背和骨盆前倾的根源之一就是"有的肌肉太紧"',how:'把需要放松的部位压在泡沫轴上,慢慢来回滚;遇到特别酸的点停住轻轻压30秒。注意:避开腰椎和膝盖直接滚压;疼到龇牙就减轻压力。',adj:false},
+    {n:'静态拉伸',d:'门框胸肌/弓步髋屈肌/下犬小腿/婴儿式,各30秒×2',k:'拉长紧张部位——胸肌紧会把肩膀往前拉,髋屈肌紧会把骨盆往前拉',how:'每个动作拉伸到「轻微牵拉感」即可,保持30秒,别拉到疼;配合深呼吸,呼气时身体更放松。',adj:false},
+    {n:'靠墙天使',s:3,r:10,t:'次',k:'激活背部、打开胸椎',how:'同周一要点:背贴墙,手臂贴墙上下滑动,腰不离墙。',adj:true},
+    {n:'收下巴(保持5秒)',s:3,r:10,t:'次',k:'练颈深屈肌——治"探头"脖子前伸',how:'坐直,水平向后收下巴(做出双下巴的感觉),保持5秒放松。注意:是水平往后,不是低头;后脑勺有轻轻的拉扯感就对了。',adj:true},
+    {n:'骨盆中立位控制',s:3,r:10,t:'次',k:'唤醒骨盆感知——矫正骨盆前倾的基本功',how:'仰卧屈膝,腰和地面之间应该只有一个手掌的缝隙;练习:拱腰(缝变大)→压平(缝消失)→回到一掌宽,每个位置停3秒。平时想到就「肋骨下压、微收腹」。',adj:true}],
   stretch:'已包含在训练里',
   tip:'今天不累,但对体态改善的效果可能是七天里最大的——别跳过'}
 ];
 const RPE_OPTS=[{v:5,e:'😌',l:'轻松'},{v:7,e:'🙂',l:'适中'},{v:9,e:'😅',l:'吃力'}];
 const MOODS=['😄','🙂','😐','🥵','😴'];
 const WDN=['周日','周一','周二','周三','周四','周五','周六'];
+const DIET_WEEK=[ // index = getDay(),忌口已避开
+ {f:'茶叶蛋1-2个 + 无糖豆浆 + 全麦面包',l:'挑清淡蒸煮类,主食减半',d:'自由挑一道最想吃的快手餐,犒劳坚持了一周的自己',c:'休息日多喝水、吃得清爽,给新一周留个好胃口'},
+ {f:'鸡蛋2个 + 无糖豆浆1盒 + 玉米半根',l:'一整块蛋白质打底(鸡腿去皮/鱼虾),再吃菜,最后主食',d:'🍤 虾仁滑蛋盖饭(15分钟,蛋白≈25g)',c:'练背日——蛋白质吃够,线条才长得出来'},
+ {f:'无糖酸奶1杯 + 燕麦3勺 + 鸡蛋1个',l:'酱汁分离,先吃蛋白质和蔬菜',d:'🍜 味噌豆腐蛋花汤 + 杂粮饭(10分钟,蛋白≈18g)',c:'核心日晚上七分饱,睡得好腰不酸'},
+ {f:'鸡蛋2个 + 无糖豆浆1盒 + 红薯半个',l:'主食减半,多要一份绿叶菜',d:'🍅 番茄肥牛汤面(15分钟,蛋白≈20g)',c:'练腿日碳水正常吃,训练才有劲'},
+ {f:'鸡蛋1个 + 无糖酸奶 + 香蕉半根',l:'避开糖醋/红烧/干锅,选蒸煮炖',d:'🍗 即食鸡胸暖沙拉(10分钟,蛋白≈27g)',c:'练手臂日,练完一杯无糖酸奶刚好'},
+ {f:'鸡蛋2个 + 无糖豆浆1盒 + 全麦面包2片',l:'正常吃够,循环日消耗大需要能量',d:'任选一道最想吃的快手餐,今天放心吃',c:'全身循环强度最大的一天,别亏待自己'},
+ {f:'鸡蛋2个 + 无糖豆浆1盒 + 燕麦3勺',l:'本周的快乐餐额度可以用在今天午餐,放心吃',d:'🥪 金枪鱼蛋三明治(10分钟,蛋白≈24g)',c:'体态矫正日,饮食清淡+多喝水,恢复效果最好'}
+];
+function renderDietToday(){
+  const d=new Date(),dw=d.getDay(),x=DIET_WEEK[dw];
+  document.getElementById('dietToday').innerHTML=
+   '<div class="card" style="border:2px solid #FFE4EE"><h3>🍽 今日饮食建议 <span class="tag t-pink">'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+WDN[dw]+'</span></h3>'+
+   '<div class="drow"><div class="ic">🌅</div><div><b>早餐</b> · '+x.f+'</div></div>'+
+   '<div class="drow"><div class="ic">🍱</div><div><b>午餐(公司外卖)</b> · '+x.l+'</div></div>'+
+   '<div class="drow"><div class="ic">🍲</div><div><b>晚餐(到家)</b> · '+x.d+'</div></div>'+
+   '<div class="drow" style="border-bottom:none"><div class="ic">💡</div><div><b>今日重心</b> · '+x.c+'</div></div>'+
+   '<p class="note">每天自动轮换,配合训练日安排 · 下方固定法则任何时候都适用</p></div>';
+}
 
 let S=load();
 function load(){
@@ -400,7 +501,7 @@ function applyAdjust(items,lv){
 }
 function itemDetail(it){return it.circuit?it.rounds+'轮 · '+it.rest:it.s+'组 × '+it.r+it.t}
 function planText(p,items){
-  const parts=items.map(it=>it.circuit?it.n+it.rounds+'轮('+it.moves.join('+')+')':it.n+' '+it.s+'组×'+it.r+it.t);
+  const parts=items.map(it=>it.circuit?it.n+it.rounds+'轮('+it.moves.map(m=>m.n).join('+')+')':it.n+' '+it.s+'组×'+it.r+it.t);
   return p.name+'。热身:'+p.warmup+'。主体:'+parts.join('、')+'。拉伸:'+p.stretch;
 }
 function streakNow(){
@@ -417,9 +518,8 @@ function renderToday(){
   const items=applyAdjust(p.items,adj.lv),lv=LV[adj.lv];
   const r=rec(k)||{items:{}};
   let h='';
-  h+='<div class="today-head"><div class="big">'+p.emoji+'</div><div><h2>'+WDN[d.getDay()]+' · '+p.name+'</h2><div class="focus">'+p.focus+'</div></div></div>';
+  h+='<div class="today-head"><div class="big">'+p.emoji+'</div><div><h2>'+WDN[d.getDay()]+' · '+p.title+'</h2><div class="focus">'+p.focus+'</div></div></div>';
   h+='<div class="adjust '+lv.cls+'"><b>🍬 今日智能调整: '+lv.tag+'</b><br>'+adj.why+'</div>';
-  // week strip
   const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
   h+='<div class="weekstrip">';
   for(let i=0;i<7;i++){
@@ -427,16 +527,20 @@ function renderToday(){
     const kk=keyOf(wd),rr=rec(kk);
     const done=rr&&rr.completed;
     const st=done?'background:'+WEEK[wd.getDay()].color+';color:#fff':'';
-    h+='<div class="wd"><div class="dot'+(done?' done':'')+(wd.getDay()===0?' rest':'')+(kk===k?' today':'')+'" style="'+st+'">'+(done?'✓':WEEK[wd.getDay()].emoji)+'</div>'+WDN[wd.getDay()].replace('周','')+'</div>';
+    h+='<div class="wd" data-dw="'+wd.getDay()+'"><div class="dot'+(done?' done':'')+(wd.getDay()===0?' rest':'')+(kk===k?' today':'')+'" style="'+st+'">'+(done?'✓':WEEK[wd.getDay()].emoji)+'</div>'+WDN[wd.getDay()].replace('周','')+'</div>';
   }
   h+='</div>';
   h+='<div class="card"><h3>🔥 热身 5分钟</h3><p class="sub">'+p.warmup+'</p></div>';
-  h+='<div class="card"><h3>💪 主体 20分钟<span class="tag t-purple" style="margin-left:6px">点一下打勾</span></h3>';
+  h+='<div class="card"><h3>💪 主体 20分钟<span class="tag t-purple" style="margin-left:6px">点圆圈打勾,点动作看要领</span></h3>';
   items.forEach((it,i)=>{
     const on=r.items[it.n]?' on':'';
     const cb=r.items[it.n]?'✓':'';
-    h+='<div class="item"><div class="ck'+on+'" data-n="'+it.n+'">'+cb+'</div><div class="nm">'+it.n+'</div><div class="dt">'+itemDetail(it)+'</div></div>';
-    if(it.circuit){h+='<div style="font-size:12.5px;color:#8E7C96;line-height:1.8;padding:4px 4px 10px 36px">'+it.moves.join(' → ')+'</div>';}
+    h+='<div class="item"><div class="ck'+on+'" data-n="'+it.n+'">'+cb+'</div><div class="nm">'+it.n+(it.k?'<div class="kfocus">🎯 '+it.k+'</div>':'')+'</div><div class="dt">'+itemDetail(it)+'</div></div>';
+    if(it.circuit){
+      h+='<div class="cuedetail" id="cue'+i+'" style="display:block">'+it.moves.map(m=>'· '+m.n+' —— '+m.k+';'+m.how).join('<br>')+'</div>';
+    }else{
+      h+='<div class="cuedetail" id="cue'+i+'">📝 动作要领:'+it.how+'</div>';
+    }
   });
   h+='</div>';
   h+='<div class="card"><h3>🧘 拉伸 5分钟(必做)</h3><p class="sub">'+p.stretch+'</p></div>';
@@ -446,10 +550,23 @@ function renderToday(){
   }
   document.getElementById('todayBox').innerHTML=h;
   document.querySelectorAll('#todayBox .ck').forEach(el=>{
-    el.addEventListener('click',()=>{
+    el.addEventListener('click',(ev)=>{
+      ev.stopPropagation();
       const n=el.getAttribute('data-n'),rec2=ensureRec(k);
       if(rec2.items[n]){delete rec2.items[n];}else{rec2.items[n]=true;}
       save();renderToday();fillForm(false);
+    });
+  });
+  document.querySelectorAll('#todayBox .item').forEach((el,idx)=>{
+    el.addEventListener('click',()=>{
+      const c=document.getElementById('cue'+idx);
+      if(c)c.style.display=c.style.display==='none'?'block':'none';
+    });
+  });
+  document.querySelectorAll('#todayBox .wd').forEach(el=>{
+    el.addEventListener('click',()=>{
+      switchTab('plan');
+      openDay(+el.getAttribute('data-dw'));
     });
   });
 }
@@ -482,6 +599,46 @@ function renderMood(){
   document.querySelectorAll('#fMood .mood').forEach(b=>b.addEventListener('click',()=>{selMood=selMood===b.getAttribute('data-m')?null:b.getAttribute('data-m');renderMood();}));
 }
 
+/* ================= 渲染:计划 ================= */
+function renderPlan(){
+  const d=new Date(),todayDw=d.getDay();
+  document.getElementById('planBox').innerHTML=WEEK.map((p,dw)=>{
+    const open=dw===todayDw;
+    let body='<div class="pbody" id="pb'+dw+'" style="display:'+(open?'block':'none')+'">';
+    body+='<div class="pline">🔥 <b>热身</b>:'+p.warmup+'</div>';
+    p.items.forEach(it=>{
+      if(it.circuit){
+        body+='<div class="pitem"><div class="pname">'+it.n+'<span class="tag t-pink">'+it.rounds+'轮 · '+it.rest+'</span></div>';
+        it.moves.forEach(m=>{body+='<div class="pk">· '+m.n+' —— 🎯 '+m.k+'</div><div class="phow">📝 '+m.how+'</div>';});
+        body+='</div>';
+      }else{
+        body+='<div class="pitem"><div class="pname">'+it.n+'<span class="tag t-pink">'+(it.s?it.s+'组 × '+it.r+it.t:it.d)+'</span></div><div class="pk">🎯 '+it.k+'</div><div class="phow">📝 '+it.how+'</div></div>';
+      }
+    });
+    body+='<div class="pline">🧘 <b>拉伸</b>:'+p.stretch+'</div>';
+    body+='<div class="tipcard" style="margin-top:8px">💡 '+p.tip+'</div></div>';
+    return '<div class="card"><div class="phead" data-dw="'+dw+'"><span class="pemoji">'+p.emoji+'</span><div><b>'+WDN[dw]+' · '+p.title+'</b><div class="pf">'+p.focus+'</div></div><span class="arr">'+(open?'▲ 收起':'▼ 展开')+'</span></div>'+body+'</div>';
+  }).join('');
+  document.querySelectorAll('#planBox .phead').forEach(el=>{
+    el.addEventListener('click',()=>{toggleDay(+el.getAttribute('data-dw'));});
+  });
+}
+function toggleDay(dw){
+  const b=document.getElementById('pb'+dw);
+  if(b)b.style.display=b.style.display==='none'?'block':'none';
+  updateArrow(dw);
+}
+function openDay(dw){
+  const b=document.getElementById('pb'+dw);
+  if(b)b.style.display='block';
+  updateArrow(dw);
+}
+function updateArrow(dw){
+  const b=document.getElementById('pb'+dw);
+  const head=document.querySelector('#planBox .phead[data-dw="'+dw+'"] .arr');
+  if(b&&head)head.textContent=b.style.display==='none'?'▼ 展开':'▲ 收起';
+}
+
 /* ================= 计时器 ================= */
 let tm=S.timer||{acc:0,start:null};
 function tmSave(){S.timer=tm;save();}
@@ -506,7 +663,7 @@ document.getElementById('btnCheckin').addEventListener('click',()=>{
   r.rpe=selRpe;r.mood=selMood;
   r.content=document.getElementById('fContent').value;
   r.note=document.getElementById('fNote').value.trim();
-  r.theme=WEEK[new Date().getDay()].name;
+  r.theme=WEEK[new Date().getDay()].title;
   delete r.contentDraft;delete r.noteDraft;delete r.wtDraft;delete r.rpeDraft;
   save();renderToday();fillForm(false);renderHead();burst();toast('打卡成功!今天的你又赢了一天 🎉');
 });
@@ -567,6 +724,82 @@ function renderWeight(){
   },80);
 }
 
+/* ================= 问答 ================= */
+const KB=[];
+WEEK.forEach(day=>day.items.forEach(it=>{
+  if(it.circuit){it.moves.forEach(m=>KB.push({a:m.n.replace(/[0-9 ]*次|[0-9 ]*秒/g,'').trim(),n:m.n,k:m.k,how:m.how}));}
+  else KB.push({a:it.n.replace(/\(.*?\)/g,''),n:it.n,k:it.k,how:it.how});
+}));
+function statsText(){
+  const done=Object.values(S.checkins).filter(c=>c.completed).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!done.length)return '你还没有打卡记录~今晚练完记得来打卡!';
+  const last=done[0];
+  const rp=RPE_OPTS.find(x=>x.v===last.rpe);
+  return '你已连续打卡 '+streakNow()+' 天,总共 '+done.length+' 次、累计 '+done.reduce((a,c)=>a+(c.duration||0),0)+' 分钟。最近一次是 '+last.date+'('+last.theme+')'+last.duration+'分钟'+(rp?','+rp.l:'')+'。继续保持~';
+}
+function weightText(){
+  const pts=Object.values(S.checkins).filter(c=>c.weight).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!pts.length)return '还没有体重记录~打卡时填上体重,「体重」标签页就能看到趋势图。';
+  const d=Math.round((pts[pts.length-1].weight-pts[0].weight)*10)/10;
+  return '体重记录 '+pts.length+' 次:首次 '+pts[0].weight+'kg → 最新 '+pts[pts.length-1].weight+'kg('+(d>0?'+':'')+d+'kg)。提醒:你的目标是紧致不是掉秤,波动±1kg都正常,看趋势就好~';
+}
+function localQA(q){
+  q=(q||'').trim();
+  if(!q)return '想问点什么?比如「深蹲怎么做」';
+  const d=new Date(),p=WEEK[d.getDay()],dw=d.getDay();
+  const has=(...ws)=>ws.some(w=>q.includes(w));
+  const hit=KB.find(e=>q.length>=2&&(q.includes(e.a)||e.a.includes(q.replace(/[??,。!]/g,''))));
+  if(hit)return '【'+hit.n+'】\n🎯 **练什么:**'+hit.k+'\n📝 **动作要领:**'+hit.how+'\n(在「计划」标签里能看到一周所有动作要领)';
+  if(has('今天','今日','练什么'))return '今天是'+WDN[dw]+' · '+p.title+'('+p.focus+')\n动作:'+p.items.map(it=>it.circuit?it.n+it.rounds+'轮':it.n).join('、')+'\n去「今日」标签逐项打勾,点动作名字看要领~';
+  if(has('明天')){const t2=WEEK[(dw+1)%7];return '明天是'+WDN[(dw+1)%7]+' · '+t2.title+'('+t2.focus+'),动作:'+t2.items.map(it=>it.n).join('、')+'。详情看「计划」标签~';}
+  if(has('体重'))return weightText();
+  if(has('打卡','记录','几次','多少','进度','坚持','怎么样','练得'))return statsText();
+  if(has('骨盆前倾'))return '**骨盆前倾**=髋前侧的髂腰肌**太紧**+腹肌和臀肌**太弱**,肚子会被"顶"出去。改善三件事:**①**周二死虫式、臀桥(练弱的);**②**每天弓步髋屈肌拉伸(放松紧的);**③**少久坐,每坐1小时起来活动2分钟。坚持4-8周会有明显变化!';
+  if(has('圆肩','驼背'))return '圆肩驼背=胸肌太紧+上背太弱。改善靠周一的划船/面拉/YTW(把背练强)+门框胸肌拉伸(把胸拉开)+日常手机抬高、视线平视。练背日就是在治它~';
+  if(has('小腿'))return '小腿突出常是小腿后侧太紧、走路代偿。对策:周三慢速提踵(慢起慢落!)+勾脚尖练前侧+每天泡沫轴滚小腿+下犬式拉伸。走路注意全脚掌落地、后跟先着地。';
+  if(has('瘦肚子','肚子','腰围'))return '肚子显大主要两个原因:骨盆前倾(体态)+脂肪。你的体重正常,重点做:周二核心日死虫式/平板(治前倾)+周五循环燃脂+饮食蛋白吃够。局部减脂不存在,但体态一好,肚子立刻显小一圈!';
+  if(has('瘦手臂','拜拜肉','手臂'))return '瘦手臂=练紧致+降体脂。周四是专项日:弯举练前侧、颈后臂屈伸和三头下压治"拜拜肉"(大臂后侧)。2kg哑铃举2秒放3秒,慢放才有效。手臂线条4-6周会有变化~';
+  if(has('吃','饮食','外卖','蛋白','食谱'))return '饮食核心:蛋白吃够75-80g、不节食、外卖按红绿灯挑(一蛋白一蔬菜主食减半)。今天建议——早餐:'+DIET_WEEK[dw].f+';晚餐:'+DIET_WEEK[dw].d+'。更多看「饮食」标签~';
+  if(has('酸','累','疼'))return '训练后24-48小时的酸胀是正常的延迟性酸痛,轻度活动+拉伸恢复更快,别完全躺平。但如果是关节刺痛或腰痛,先停掉相关动作;持续疼建议看医生或物理治疗师。';
+  if(has('多久','效果','有用吗','见效'))return '一般节奏:**2周**动作熟练、睡眠变好;**4周**体态开始变直;**8-12周**肚子视觉小一圈、手臂腿部线条出现。关键是别断——页面会根据你的打卡自动调整强度,跟着走就行~';
+  if(has('你好','在吗','hi','hello','嗨'))return '嗨~我在!可以问我动作要领、今天的训练、你的打卡进度、饮食怎么吃,或者体态问题怎么改善。';
+  return '这个问题我离线模式下答不太准😅 你可以问我:\n· 某个动作怎么做(如「深蹲」「划船」)\n· 今天/明天练什么\n· 我练得怎么样/体重趋势\n· 骨盆前倾/圆肩驼背/小腿怎么改善\n· 怎么吃/瘦肚子/瘦手臂';
+}
+function buildCtx(){
+  const d=new Date(),p=WEEK[d.getDay()],dw=d.getDay();
+  const done=Object.values(S.checkins).filter(c=>c.completed).sort((a,b)=>b.date.localeCompare(a.date));
+  const last=done.slice(0,5).map(c=>c.date+c.theme+c.duration+'分钟').join(';')||'暂无';
+  const wt=done.filter(c=>c.weight).sort((a,b)=>a.date.localeCompare(b.date)).map(c=>c.date+':'+c.weight+'kg').join(',')||'暂无';
+  return '今天'+WDN[dw]+p.title+'(动作:'+p.items.map(it=>it.circuit?it.n:it.n).join('、')+');连续打卡'+streakNow()+'天;共'+done.length+'次;最近记录:'+last+';体重:'+wt+'。';
+}
+function mdLite(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}
+function chatAdd(t,who,md){
+  const l=document.getElementById('chatList');
+  const em=l.querySelector('.empty');if(em)em.remove();
+  const div=document.createElement('div');div.className='msg '+who;
+  if(md)div.innerHTML=mdLite(t);else div.textContent=t;
+  l.appendChild(div);l.scrollTop=l.scrollHeight;return div;
+}
+async function askQ(){
+  const inp=document.getElementById('chatQ');
+  const q=inp.value.trim();if(!q)return;
+  inp.value='';
+  chatAdd(q,'u');
+  const holder=chatAdd('想一下…','b');
+  if(window.cowork&&window.cowork.askClaude){
+    try{
+      const prompt='你是专业又暖心的健身教练助手。用户是健身零基础女生(160cm/53.2kg),目标:改善骨盆前倾、圆肩驼背、小腿突出,瘦肚子瘦手臂,练背腹腿;器械只有2kg哑铃和弹力带;不吃葱、姜、蒜、洋葱、香菜、牛奶。用简体中文回答,80-150字,实用具体、鼓励但不油腻。她的打卡数据:'+buildCtx()+'\n\n她的问题:'+q;
+      const r=await window.cowork.askClaude(prompt,[]);
+      holder.innerHTML=mdLite((typeof r==='string')?r:((r&&r.text)||JSON.stringify(r)));
+    }catch(e){holder.innerHTML=mdLite(localQA(q));}
+  }else{
+    setTimeout(()=>{holder.innerHTML=mdLite(localQA(q));},350);
+  }
+}
+document.getElementById('chatSend').addEventListener('click',askQ);
+document.getElementById('chatQ').addEventListener('keydown',e=>{if(e.key==='Enter')askQ();});
+(function(){document.getElementById('chatMode').textContent=(window.cowork&&window.cowork.askClaude)?'🤖 智能模式:接入 Claude,可自由提问':'📖 离线模式:基于本页训练知识与你的打卡数据回答,常见问题都能答(在 Claude 里打开本页面则是智能模式)';})();
+
 /* ================= 设置 ================= */
 document.getElementById('setTime').value=S.settings.reminderTime;
 document.getElementById('btnSync').addEventListener('click',async()=>{
@@ -590,6 +823,33 @@ document.getElementById('btnSync').addEventListener('click',async()=>{
       toast('成功!以后每晚 '+t+' 提醒你 🍬');
     }
   }catch(e){toast('同步失败,回到对话里说「把健身提醒改到'+t+'」也可以');}
+});
+document.getElementById('btnExport').addEventListener('click',()=>{
+  try{
+    const blob=new Blob([JSON.stringify(S)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='健身日记备份-'+todayKey()+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    toast('已导出!建议发到微信文件传输助手保存 📤');
+  }catch(e){toast('导出失败,试试「复制全部数据」');}
+});
+document.getElementById('btnFileIn2').addEventListener('click',()=>{document.getElementById('fileIn').click();});
+document.getElementById('fileIn').addEventListener('change',(e)=>{
+  const f=e.target.files&&e.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const p=JSON.parse(rd.result);
+      if(!p.checkins||!p.settings)throw 0;
+      S=p;save();renderAll();document.getElementById('setTime').value=S.settings.reminderTime;
+      toast('导入成功,记录已恢复 ✅');
+    }catch(err){toast('文件格式不对,确认选的是备份文件');}
+    e.target.value='';
+  };
+  rd.readAsText(f);
 });
 document.getElementById('btnCopy').addEventListener('click',async()=>{
   const txt=JSON.stringify(S);
@@ -625,18 +885,21 @@ function renderHead(){
   document.getElementById('headDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 · 开始日 2026-10-08 · 目标:体态矫正+紧致塑形';
   document.getElementById('headStreak').textContent='🔥 连续打卡 '+streakNow()+' 天';
 }
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
+const TABCOLORS={today:['#FFE4EE','#D66A93'],plan:['#FFF3D9','#C08A2D'],diet:['#E2F6ED','#3E9A78'],chat:['#EEE9FB','#8368C9'],records:['#E5F4FC','#4A93BF'],weight:['#FFEEE2','#C77E4A'],settings:['#F3EDF5','#8E7C96']};
+function switchTab(name){
   document.querySelectorAll('nav button').forEach(x=>{x.classList.remove('active');x.style.background='#fff';x.style.color='#8E7C96';});
-  b.classList.add('active');
-  const map={today:['#FFE4EE','#D66A93'],diet:['#E2F6ED','#3E9A78'],records:['#FFF3D9','#C08A2D'],weight:['#E5F4FC','#4A93BF'],settings:['#EEE9FB','#8368C9']};
-  const m=map[b.dataset.tab]||['#FFE4EE','#D66A93'];
-  b.style.background=m[0];b.style.color=m[1];
+  const btn=document.querySelector('nav button[data-tab="'+name+'"]');
+  const m=TABCOLORS[name]||['#FFE4EE','#D66A93'];
+  if(btn){btn.classList.add('active');btn.style.background=m[0];btn.style.color=m[1];}
   document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('show'));
-  document.getElementById('tab-'+b.dataset.tab).classList.add('show');
-  if(b.dataset.tab==='records')renderRecords();
-  if(b.dataset.tab==='weight')renderWeight();
-}));
-function renderAll(){renderHead();renderToday();fillForm(true);}
+  document.getElementById('tab-'+name).classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='plan')renderPlan();
+  if(name==='records')renderRecords();
+  if(name==='weight')renderWeight();
+}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{switchTab(b.dataset.tab);}));
+function renderAll(){renderHead();renderToday();fillForm(true);renderDietToday();}
 renderAll();tmTick();
 </script>
 </body>
